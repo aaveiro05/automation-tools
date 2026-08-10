@@ -1,0 +1,16 @@
+# Credenciales — NUNCA al repositorio
+.env
+*.key
+credenciales*.json
+secrets/
+
+# Dependencias
+node_modules/
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Datos de clientes
+datos-clientes/
+*.csv
