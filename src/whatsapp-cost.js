@@ -11,6 +11,13 @@ const PRECIOS = {
 // Cuanto sale mandar "cantidad" mensajes de una categoria.
 function costoPorCategoria(categoria, cantidad) {
   const precio = PRECIOS[categoria]; // busco el precio en la tabla
+
+  // Si la categoria no existe en la tabla, precio queda en undefined.
+  // Cortamos aca en vez de devolver NaN y que el error siga viaje.
+  if (precio === undefined) {
+    throw new Error("Categoria desconocida: " + categoria);
+  }
+
   return precio * cantidad;
 }
 
