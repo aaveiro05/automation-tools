@@ -1,0 +1,21 @@
+{
+  "name": "automation-tools",
+  "version": "1.0.0",
+  "description": "Internal tools I build and use to run my process-automation work for small businesses in northeast Argentina.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aaveiro05/automation-tools.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/aaveiro05/automation-tools/issues"
+  },
+  "homepage": "https://github.com/aaveiro05/automation-tools#readme"
+}
