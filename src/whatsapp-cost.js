@@ -1,11 +1,16 @@
 // Calculadora de costos de WhatsApp Business
-// OJO: estos precios son INVENTADOS. Los reemplazamos por el rate card
-// real de Meta cuando la logica funcione.
 
+// Precios oficiales de Meta para Argentina, en ARS por mensaje entregado.
+// Rate card vigente desde el 1/7/2026. Meta anuncio cambios para el 1/10/2026:
+// hay que volver a bajarlo despues de esa fecha.
+// Fuente: https://developers.facebook.com/docs/whatsapp/pricing
+//
+// Los mensajes de servicio (respuestas dentro de la ventana de 24 hs) no
+// tienen tarifa: por eso no estan en esta tabla.
 const PRECIOS = {
-  utility: 12,
-  marketing: 60,
-  authentication: 12
+  utility: 37.6798,
+  marketing: 89.5620,
+  authentication: 37.6798
 };
 
 // Cuanto sale mandar "cantidad" mensajes de una categoria.
@@ -21,7 +26,7 @@ function costoPorCategoria(categoria, cantidad) {
   return precio * cantidad;
 }
 
-console.log(costoPorCategoria("utility", 600)); // 7200
+console.log(costoPorCategoria("utility", 600));
 
 const MEZCLA = {
   utility: 600,
