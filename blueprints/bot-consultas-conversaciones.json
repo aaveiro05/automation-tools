@@ -1,0 +1,1697 @@
+{
+    "name": "conversaciones",
+    "flow": [
+        {
+            "id": 2,
+            "module": "gateway:CustomWebHook",
+            "version": 1,
+            "parameters": {
+                "hook": 2714474,
+                "maxResults": 1
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": -114,
+                    "y": -4
+                },
+                "restore": {
+                    "parameters": {
+                        "hook": {
+                            "data": {
+                                "editable": "true"
+                            },
+                            "label": "bot_consultas"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "hook",
+                        "type": "hook:gateway-webhook",
+                        "label": "Webhook",
+                        "required": true
+                    },
+                    {
+                        "name": "maxResults",
+                        "type": "number",
+                        "label": "Maximum number of results"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "telefono",
+                        "type": "text"
+                    },
+                    {
+                        "name": "mensaje",
+                        "type": "text"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 25,
+            "module": "builtin:BasicRouter",
+            "version": 1,
+            "filter": null,
+            "mapper": null,
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0
+                }
+            },
+            "routes": [
+                {
+                    "flow": [
+                        {
+                            "id": 4,
+                            "module": "datastore:GetRecord",
+                            "version": 1,
+                            "parameters": {
+                                "datastore": 135130
+                            },
+                            "filter": {
+                                "name": "Sin urgencia",
+                                "conditions": [
+                                    [
+                                        {
+                                            "a": "{{2.mensaje}}",
+                                            "b": "dolor",
+                                            "o": "text:notcontain"
+                                        },
+                                        {
+                                            "a": "{{2.mensaje}}",
+                                            "b": "duele",
+                                            "o": "text:notcontain"
+                                        },
+                                        {
+                                            "a": "{{2.mensaje}}",
+                                            "b": "molest",
+                                            "o": "text:notcontain"
+                                        },
+                                        {
+                                            "a": "{{2.mensaje}}",
+                                            "b": "hinch",
+                                            "o": "text:notcontain"
+                                        },
+                                        {
+                                            "a": "{{2.mensaje}}",
+                                            "b": "sens",
+                                            "o": "text:notcontain"
+                                        },
+                                        {
+                                            "a": "{{2.mensaje}}",
+                                            "b": "urgen",
+                                            "o": "text:notcontain"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "mapper": {
+                                "key": "{{2.telefono}}",
+                                "returnWrapped": true
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 600,
+                                    "y": -300
+                                },
+                                "restore": {
+                                    "parameters": {
+                                        "datastore": {
+                                            "label": "conversaciones"
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "datastore",
+                                        "type": "datastore",
+                                        "label": "Data store",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "key",
+                                        "type": "text",
+                                        "label": "Key",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "returnWrapped",
+                                        "type": "boolean",
+                                        "label": "Return Wrapped Output",
+                                        "required": true
+                                    }
+                                ],
+                                "interface": [
+                                    {
+                                        "name": "key",
+                                        "type": "text",
+                                        "label": "Key"
+                                    },
+                                    {
+                                        "name": "data",
+                                        "spec": [
+                                            {
+                                                "help": "",
+                                                "name": "estado",
+                                                "type": "text",
+                                                "label": null
+                                            },
+                                            {
+                                                "help": "",
+                                                "name": "nombre",
+                                                "type": "text",
+                                                "label": null
+                                            },
+                                            {
+                                                "help": "",
+                                                "name": "preferencia",
+                                                "type": "text",
+                                                "label": null
+                                            },
+                                            {
+                                                "help": "",
+                                                "name": "ultima_actividad",
+                                                "type": "text",
+                                                "label": null
+                                            }
+                                        ],
+                                        "type": "collection",
+                                        "label": "Record"
+                                    }
+                                ],
+                                "advanced": true
+                            }
+                        },
+                        {
+                            "id": 7,
+                            "module": "builtin:BasicRouter",
+                            "version": 1,
+                            "mapper": null,
+                            "metadata": {
+                                "designer": {
+                                    "x": 900,
+                                    "y": 0
+                                }
+                            },
+                            "routes": [
+                                {
+                                    "flow": [
+                                        {
+                                            "id": 10,
+                                            "module": "datastore:AddRecord",
+                                            "version": 1,
+                                            "parameters": {
+                                                "datastore": 135130
+                                            },
+                                            "filter": {
+                                                "name": "primera vez",
+                                                "conditions": [
+                                                    [
+                                                        {
+                                                            "a": "{{4.data.estado}}",
+                                                            "o": "notexist"
+                                                        }
+                                                    ]
+                                                ]
+                                            },
+                                            "mapper": {
+                                                "key": "{{2.telefono}}",
+                                                "overwrite": true,
+                                                "data": {
+                                                    "estado": "menu",
+                                                    "nombre": "",
+                                                    "preferencia": "",
+                                                    "ultima_actividad": "{{formatDate(now; \"DD/MM/YYYY - HH:mm\"; \"America/Argentina/Buenos_Aires \")}}"
+                                                }
+                                            },
+                                            "metadata": {
+                                                "designer": {
+                                                    "x": 1200,
+                                                    "y": -750,
+                                                    "name": "primera vez"
+                                                },
+                                                "restore": {
+                                                    "parameters": {
+                                                        "datastore": {
+                                                            "label": "conversaciones"
+                                                        }
+                                                    },
+                                                    "expect": {
+                                                        "overwrite": {
+                                                            "mode": "chose"
+                                                        }
+                                                    }
+                                                },
+                                                "parameters": [
+                                                    {
+                                                        "name": "datastore",
+                                                        "type": "datastore",
+                                                        "label": "Data store",
+                                                        "required": true
+                                                    }
+                                                ],
+                                                "expect": [
+                                                    {
+                                                        "name": "key",
+                                                        "type": "text",
+                                                        "label": "Key"
+                                                    },
+                                                    {
+                                                        "name": "overwrite",
+                                                        "type": "boolean",
+                                                        "label": "Overwrite an existing record",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "data",
+                                                        "type": "collection",
+                                                        "label": "Record",
+                                                        "spec": [
+                                                            {
+                                                                "name": "estado",
+                                                                "type": "text",
+                                                                "label": null
+                                                            },
+                                                            {
+                                                                "name": "nombre",
+                                                                "type": "text",
+                                                                "label": null
+                                                            },
+                                                            {
+                                                                "name": "preferencia",
+                                                                "type": "text",
+                                                                "label": null
+                                                            },
+                                                            {
+                                                                "name": "ultima_actividad",
+                                                                "type": "text",
+                                                                "label": null
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        {
+                                            "id": 11,
+                                            "module": "gateway:WebhookRespond",
+                                            "version": 1,
+                                            "parameters": {},
+                                            "mapper": {
+                                                "body": "Hola, soy el asistente virtual de Juan. ¿En qué te puedo ayudar?\n1 - Sacar un turno\r\n2 - Tengo una consulta\r\n3 - Hablar con el Dr. Aveiro",
+                                                "status": "200",
+                                                "headers": [
+                                                    {
+                                                        "key": "Content-Type",
+                                                        "value": "text/plain; charset=utf-8"
+                                                    }
+                                                ]
+                                            },
+                                            "metadata": {
+                                                "designer": {
+                                                    "x": 2225,
+                                                    "y": -843,
+                                                    "name": "primera agenda"
+                                                },
+                                                "restore": {
+                                                    "expect": {
+                                                        "headers": {
+                                                            "mode": "chose",
+                                                            "items": [
+                                                                null
+                                                            ]
+                                                        }
+                                                    }
+                                                },
+                                                "expect": [
+                                                    {
+                                                        "name": "status",
+                                                        "type": "uinteger",
+                                                        "label": "Status",
+                                                        "required": true,
+                                                        "validate": {
+                                                            "min": 100
+                                                        }
+                                                    },
+                                                    {
+                                                        "name": "body",
+                                                        "type": "any",
+                                                        "label": "Body"
+                                                    },
+                                                    {
+                                                        "name": "headers",
+                                                        "spec": [
+                                                            {
+                                                                "name": "key",
+                                                                "type": "text",
+                                                                "label": "Key",
+                                                                "required": true,
+                                                                "validate": {
+                                                                    "max": 256
+                                                                }
+                                                            },
+                                                            {
+                                                                "name": "value",
+                                                                "type": "text",
+                                                                "label": "Value",
+                                                                "required": true,
+                                                                "validate": {
+                                                                    "max": 4096
+                                                                }
+                                                            }
+                                                        ],
+                                                        "type": "array",
+                                                        "label": "Custom headers",
+                                                        "validate": {
+                                                            "maxItems": 16
+                                                        }
+                                                    }
+                                                ],
+                                                "advanced": true
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "flow": [
+                                        {
+                                            "id": 12,
+                                            "module": "datastore:AddRecord",
+                                            "version": 1,
+                                            "parameters": {
+                                                "datastore": 135130
+                                            },
+                                            "filter": {
+                                                "name": "Eligio turno",
+                                                "conditions": [
+                                                    [
+                                                        {
+                                                            "a": "{{2.mensaje}}",
+                                                            "b": "1",
+                                                            "o": "text:equal"
+                                                        },
+                                                        {
+                                                            "a": "{{4.data.estado}}",
+                                                            "b": "menu",
+                                                            "o": "text:equal"
+                                                        }
+                                                    ]
+                                                ]
+                                            },
+                                            "mapper": {
+                                                "key": "{{2.telefono}}",
+                                                "overwrite": true,
+                                                "data": {
+                                                    "estado": "pidiendo_nombre",
+                                                    "nombre": "",
+                                                    "preferencia": "",
+                                                    "ultima_actividad": "{{formatDate(now; \"DD/MM/YYYY - HH:mm\"; \"America/Argentina/Buenos_Aires\")}}"
+                                                }
+                                            },
+                                            "metadata": {
+                                                "designer": {
+                                                    "x": 1200,
+                                                    "y": -450
+                                                },
+                                                "restore": {
+                                                    "parameters": {
+                                                        "datastore": {
+                                                            "label": "conversaciones"
+                                                        }
+                                                    },
+                                                    "expect": {
+                                                        "overwrite": {
+                                                            "mode": "chose"
+                                                        }
+                                                    }
+                                                },
+                                                "parameters": [
+                                                    {
+                                                        "name": "datastore",
+                                                        "type": "datastore",
+                                                        "label": "Data store",
+                                                        "required": true
+                                                    }
+                                                ],
+                                                "expect": [
+                                                    {
+                                                        "name": "key",
+                                                        "type": "text",
+                                                        "label": "Key"
+                                                    },
+                                                    {
+                                                        "name": "overwrite",
+                                                        "type": "boolean",
+                                                        "label": "Overwrite an existing record",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "data",
+                                                        "type": "collection",
+                                                        "label": "Record",
+                                                        "spec": [
+                                                            {
+                                                                "name": "estado",
+                                                                "type": "text",
+                                                                "label": null
+                                                            },
+                                                            {
+                                                                "name": "nombre",
+                                                                "type": "text",
+                                                                "label": null
+                                                            },
+                                                            {
+                                                                "name": "preferencia",
+                                                                "type": "text",
+                                                                "label": null
+                                                            },
+                                                            {
+                                                                "name": "ultima_actividad",
+                                                                "type": "text",
+                                                                "label": null
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        {
+                                            "id": 13,
+                                            "module": "gateway:WebhookRespond",
+                                            "version": 1,
+                                            "parameters": {},
+                                            "mapper": {
+                                                "body": "Perfecto. ¿Cómo te llamás?",
+                                                "status": "200",
+                                                "headers": [
+                                                    {
+                                                        "key": "Content-Type",
+                                                        "value": "text/plain; charset=utf-8"
+                                                    }
+                                                ]
+                                            },
+                                            "metadata": {
+                                                "designer": {
+                                                    "x": 2271,
+                                                    "y": -363
+                                                },
+                                                "restore": {
+                                                    "expect": {
+                                                        "headers": {
+                                                            "mode": "chose",
+                                                            "items": [
+                                                                null
+                                                            ]
+                                                        }
+                                                    }
+                                                },
+                                                "expect": [
+                                                    {
+                                                        "name": "status",
+                                                        "type": "uinteger",
+                                                        "label": "Status",
+                                                        "required": true,
+                                                        "validate": {
+                                                            "min": 100
+                                                        }
+                                                    },
+                                                    {
+                                                        "name": "body",
+                                                        "type": "any",
+                                                        "label": "Body"
+                                                    },
+                                                    {
+                                                        "name": "headers",
+                                                        "spec": [
+                                                            {
+                                                                "name": "key",
+                                                                "type": "text",
+                                                                "label": "Key",
+                                                                "required": true,
+                                                                "validate": {
+                                                                    "max": 256
+                                                                }
+                                                            },
+                                                            {
+                                                                "name": "value",
+                                                                "type": "text",
+                                                                "label": "Value",
+                                                                "required": true,
+                                                                "validate": {
+                                                                    "max": 4096
+                                                                }
+                                                            }
+                                                        ],
+                                                        "type": "array",
+                                                        "label": "Custom headers",
+                                                        "validate": {
+                                                            "maxItems": 16
+                                                        }
+                                                    }
+                                                ],
+                                                "advanced": true
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "flow": [
+                                        {
+                                            "id": 16,
+                                            "module": "datastore:UpdateRecord",
+                                            "version": 1,
+                                            "parameters": {
+                                                "datastore": 135130
+                                            },
+                                            "filter": {
+                                                "name": "Dando nombre",
+                                                "conditions": [
+                                                    [
+                                                        {
+                                                            "a": "{{4.data.estado}}",
+                                                            "b": "pidiendo_nombre",
+                                                            "o": "text:equal"
+                                                        }
+                                                    ]
+                                                ]
+                                            },
+                                            "mapper": {
+                                                "key": "{{2.telefono}}",
+                                                "upsert": true,
+                                                "overwriteArrays": false,
+                                                "data": {
+                                                    "estado": "pidiendo_preferencia",
+                                                    "nombre": "{{2.mensaje}}",
+                                                    "preferencia": "",
+                                                    "ultima_actividad": "{{formatDate(now; \"DD/MM/YYYY - HH:mm\"; \"America/Argentina/Buenos_Aires\")}}"
+                                                }
+                                            },
+                                            "metadata": {
+                                                "designer": {
+                                                    "x": 1200,
+                                                    "y": -150
+                                                },
+                                                "restore": {
+                                                    "parameters": {
+                                                        "datastore": {
+                                                            "label": "conversaciones"
+                                                        }
+                                                    },
+                                                    "expect": {
+                                                        "upsert": {
+                                                            "mode": "chose"
+                                                        },
+                                                        "overwriteArrays": {
+                                                            "mode": "chose"
+                                                        }
+                                                    }
+                                                },
+                                                "parameters": [
+                                                    {
+                                                        "name": "datastore",
+                                                        "type": "datastore",
+                                                        "label": "Data store",
+                                                        "required": true
+                                                    }
+                                                ],
+                                                "expect": [
+                                                    {
+                                                        "name": "key",
+                                                        "type": "text",
+                                                        "label": "Key",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "upsert",
+                                                        "type": "boolean",
+                                                        "label": "Insert missing record",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "overwriteArrays",
+                                                        "type": "boolean",
+                                                        "label": "Overwrite an existing array in the record",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "data",
+                                                        "type": "collection",
+                                                        "label": "Record",
+                                                        "spec": [
+                                                            {
+                                                                "name": "estado",
+                                                                "type": "text",
+                                                                "label": null
+                                                            },
+                                                            {
+                                                                "name": "nombre",
+                                                                "type": "text",
+                                                                "label": null
+                                                            },
+                                                            {
+                                                                "name": "preferencia",
+                                                                "type": "text",
+                                                                "label": null
+                                                            },
+                                                            {
+                                                                "name": "ultima_actividad",
+                                                                "type": "text",
+                                                                "label": null
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        {
+                                            "id": 17,
+                                            "module": "gateway:WebhookRespond",
+                                            "version": 1,
+                                            "parameters": {},
+                                            "mapper": {
+                                                "body": "Gracias,{{2.mensaje}}. ¿Qué días u horarios te vienen mejor?",
+                                                "status": "200",
+                                                "headers": [
+                                                    {
+                                                        "key": "Content-Type",
+                                                        "value": "text/plain; charset=utf-8"
+                                                    }
+                                                ]
+                                            },
+                                            "metadata": {
+                                                "designer": {
+                                                    "x": 2287,
+                                                    "y": 87
+                                                },
+                                                "restore": {
+                                                    "expect": {
+                                                        "headers": {
+                                                            "mode": "chose",
+                                                            "items": [
+                                                                null
+                                                            ]
+                                                        }
+                                                    }
+                                                },
+                                                "expect": [
+                                                    {
+                                                        "name": "status",
+                                                        "type": "uinteger",
+                                                        "label": "Status",
+                                                        "required": true,
+                                                        "validate": {
+                                                            "min": 100
+                                                        }
+                                                    },
+                                                    {
+                                                        "name": "body",
+                                                        "type": "any",
+                                                        "label": "Body"
+                                                    },
+                                                    {
+                                                        "name": "headers",
+                                                        "spec": [
+                                                            {
+                                                                "name": "key",
+                                                                "type": "text",
+                                                                "label": "Key",
+                                                                "required": true,
+                                                                "validate": {
+                                                                    "max": 256
+                                                                }
+                                                            },
+                                                            {
+                                                                "name": "value",
+                                                                "type": "text",
+                                                                "label": "Value",
+                                                                "required": true,
+                                                                "validate": {
+                                                                    "max": 4096
+                                                                }
+                                                            }
+                                                        ],
+                                                        "type": "array",
+                                                        "label": "Custom headers",
+                                                        "validate": {
+                                                            "maxItems": 16
+                                                        }
+                                                    }
+                                                ],
+                                                "advanced": true
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "flow": [
+                                        {
+                                            "id": 18,
+                                            "module": "datastore:UpdateRecord",
+                                            "version": 1,
+                                            "parameters": {
+                                                "datastore": 135130
+                                            },
+                                            "filter": {
+                                                "name": "Dando preferencia",
+                                                "conditions": [
+                                                    [
+                                                        {
+                                                            "a": "{{4.data.estado}}",
+                                                            "b": "pidiendo_preferencia",
+                                                            "o": "text:equal"
+                                                        }
+                                                    ]
+                                                ]
+                                            },
+                                            "mapper": {
+                                                "key": "{{2.telefono}}",
+                                                "upsert": true,
+                                                "overwriteArrays": false,
+                                                "data": {
+                                                    "estado": "completo",
+                                                    "nombre": "",
+                                                    "preferencia": "{{2.mensaje}}",
+                                                    "ultima_actividad": "{{formatDate(now; \"DD/MM/YYYY - HH:mm\"; \"America/Argentina/Buenos_Aires\")}}"
+                                                }
+                                            },
+                                            "metadata": {
+                                                "designer": {
+                                                    "x": 1200,
+                                                    "y": 150
+                                                },
+                                                "restore": {
+                                                    "parameters": {
+                                                        "datastore": {
+                                                            "label": "conversaciones"
+                                                        }
+                                                    },
+                                                    "expect": {
+                                                        "upsert": {
+                                                            "mode": "chose"
+                                                        },
+                                                        "overwriteArrays": {
+                                                            "mode": "chose"
+                                                        }
+                                                    }
+                                                },
+                                                "parameters": [
+                                                    {
+                                                        "name": "datastore",
+                                                        "type": "datastore",
+                                                        "label": "Data store",
+                                                        "required": true
+                                                    }
+                                                ],
+                                                "expect": [
+                                                    {
+                                                        "name": "key",
+                                                        "type": "text",
+                                                        "label": "Key",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "upsert",
+                                                        "type": "boolean",
+                                                        "label": "Insert missing record",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "overwriteArrays",
+                                                        "type": "boolean",
+                                                        "label": "Overwrite an existing array in the record",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "data",
+                                                        "type": "collection",
+                                                        "label": "Record",
+                                                        "spec": [
+                                                            {
+                                                                "name": "estado",
+                                                                "type": "text",
+                                                                "label": null
+                                                            },
+                                                            {
+                                                                "name": "nombre",
+                                                                "type": "text",
+                                                                "label": null
+                                                            },
+                                                            {
+                                                                "name": "preferencia",
+                                                                "type": "text",
+                                                                "label": null
+                                                            },
+                                                            {
+                                                                "name": "ultima_actividad",
+                                                                "type": "text",
+                                                                "label": null
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        {
+                                            "id": 21,
+                                            "module": "google-sheets:addRow",
+                                            "version": 2,
+                                            "parameters": {
+                                                "__IMTCONN__": 10428105
+                                            },
+                                            "mapper": {
+                                                "mode": "select",
+                                                "insertUnformatted": false,
+                                                "valueInputOption": "USER_ENTERED",
+                                                "insertDataOption": "INSERT_ROWS",
+                                                "from": "drive",
+                                                "spreadsheetId": "/1ah4YbV10Gf3NSgBnOh6uno0Kxpb2nxFyAvI4J7gWTGE",
+                                                "sheetId": "Hoja 1",
+                                                "includesHeaders": true,
+                                                "useColumnHeaders": false,
+                                                "values": {
+                                                    "0": "{{formatDate(now; \"DD/MM/YYYY - HH:mm \"; \"America/Argentina/Buenos_Aires\")}}",
+                                                    "1": "{{4.data.nombre}}",
+                                                    "2": "{{2.telefono}}",
+                                                    "3": "{{2.mensaje}}",
+                                                    "4": "pendiente",
+                                                    "5": "https://wa.me/{{2.telefono}}"
+                                                }
+                                            },
+                                            "metadata": {
+                                                "designer": {
+                                                    "x": 1878,
+                                                    "y": 600
+                                                },
+                                                "restore": {
+                                                    "parameters": {
+                                                        "__IMTCONN__": {
+                                                            "label": "alej0's Google connection (alejoaveiro05@gmail.com)",
+                                                            "data": {
+                                                                "scoped": "true",
+                                                                "connection": "google"
+                                                            }
+                                                        }
+                                                    },
+                                                    "expect": {
+                                                        "mode": {
+                                                            "label": "Search by path"
+                                                        },
+                                                        "insertUnformatted": {
+                                                            "mode": "chose"
+                                                        },
+                                                        "valueInputOption": {
+                                                            "mode": "chose",
+                                                            "label": "User entered"
+                                                        },
+                                                        "insertDataOption": {
+                                                            "mode": "chose",
+                                                            "label": "Insert rows"
+                                                        },
+                                                        "from": {
+                                                            "label": "My Drive"
+                                                        },
+                                                        "spreadsheetId": {
+                                                            "path": [
+                                                                "pedidos"
+                                                            ]
+                                                        },
+                                                        "sheetId": {
+                                                            "label": "Hoja 1"
+                                                        },
+                                                        "includesHeaders": {
+                                                            "label": "Yes"
+                                                        },
+                                                        "useColumnHeaders": {
+                                                            "label": "No"
+                                                        }
+                                                    }
+                                                },
+                                                "parameters": [
+                                                    {
+                                                        "name": "__IMTCONN__",
+                                                        "type": "account:google",
+                                                        "label": "Connection",
+                                                        "required": true
+                                                    }
+                                                ],
+                                                "expect": [
+                                                    {
+                                                        "name": "mode",
+                                                        "type": "select",
+                                                        "label": "Search Method",
+                                                        "required": true,
+                                                        "validate": {
+                                                            "enum": [
+                                                                "select",
+                                                                "fromAll",
+                                                                "map"
+                                                            ]
+                                                        }
+                                                    },
+                                                    {
+                                                        "name": "insertUnformatted",
+                                                        "type": "boolean",
+                                                        "label": "Unformatted",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "valueInputOption",
+                                                        "type": "select",
+                                                        "label": "Value input option",
+                                                        "required": true,
+                                                        "validate": {
+                                                            "enum": [
+                                                                "USER_ENTERED",
+                                                                "RAW"
+                                                            ]
+                                                        }
+                                                    },
+                                                    {
+                                                        "name": "insertDataOption",
+                                                        "type": "select",
+                                                        "label": "Insert data option",
+                                                        "validate": {
+                                                            "enum": [
+                                                                "INSERT_ROWS",
+                                                                "OVERWRITE"
+                                                            ]
+                                                        }
+                                                    },
+                                                    {
+                                                        "name": "from",
+                                                        "type": "select",
+                                                        "label": "Drive",
+                                                        "required": true,
+                                                        "validate": {
+                                                            "enum": [
+                                                                "drive",
+                                                                "share",
+                                                                "team"
+                                                            ]
+                                                        }
+                                                    },
+                                                    {
+                                                        "name": "spreadsheetId",
+                                                        "type": "file",
+                                                        "label": "Spreadsheet Name",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "sheetId",
+                                                        "type": "select",
+                                                        "label": "Sheet Name",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "includesHeaders",
+                                                        "type": "select",
+                                                        "label": "Table contains headers",
+                                                        "required": true,
+                                                        "validate": {
+                                                            "enum": [
+                                                                true,
+                                                                false
+                                                            ]
+                                                        }
+                                                    },
+                                                    {
+                                                        "name": "useColumnHeaders",
+                                                        "type": "select",
+                                                        "label": "Use column headers as IDs of the columns",
+                                                        "required": true,
+                                                        "validate": {
+                                                            "enum": [
+                                                                true,
+                                                                false
+                                                            ]
+                                                        }
+                                                    },
+                                                    {
+                                                        "name": "values",
+                                                        "type": "collection",
+                                                        "label": "Values in columns",
+                                                        "metadata": [
+                                                            [
+                                                                [
+                                                                    "fecha",
+                                                                    "nombre",
+                                                                    "teléfono",
+                                                                    "preferencias",
+                                                                    "gestión",
+                                                                    "escribir"
+                                                                ]
+                                                            ]
+                                                        ],
+                                                        "spec": [
+                                                            {
+                                                                "name": "0",
+                                                                "type": "text",
+                                                                "label": "fecha (A)"
+                                                            },
+                                                            {
+                                                                "name": "1",
+                                                                "type": "text",
+                                                                "label": "nombre (B)"
+                                                            },
+                                                            {
+                                                                "name": "2",
+                                                                "type": "text",
+                                                                "label": "teléfono (C)"
+                                                            },
+                                                            {
+                                                                "name": "3",
+                                                                "type": "text",
+                                                                "label": "preferencias (D)"
+                                                            },
+                                                            {
+                                                                "name": "4",
+                                                                "type": "text",
+                                                                "label": "gestión (E)"
+                                                            },
+                                                            {
+                                                                "name": "5",
+                                                                "type": "text",
+                                                                "label": "escribir (F)"
+                                                            },
+                                                            {
+                                                                "name": "6",
+                                                                "type": "text",
+                                                                "label": "(G)"
+                                                            },
+                                                            {
+                                                                "name": "7",
+                                                                "type": "text",
+                                                                "label": "(H)"
+                                                            },
+                                                            {
+                                                                "name": "8",
+                                                                "type": "text",
+                                                                "label": "(I)"
+                                                            },
+                                                            {
+                                                                "name": "9",
+                                                                "type": "text",
+                                                                "label": "(J)"
+                                                            },
+                                                            {
+                                                                "name": "10",
+                                                                "type": "text",
+                                                                "label": "(K)"
+                                                            },
+                                                            {
+                                                                "name": "11",
+                                                                "type": "text",
+                                                                "label": "(L)"
+                                                            },
+                                                            {
+                                                                "name": "12",
+                                                                "type": "text",
+                                                                "label": "(M)"
+                                                            },
+                                                            {
+                                                                "name": "13",
+                                                                "type": "text",
+                                                                "label": "(N)"
+                                                            },
+                                                            {
+                                                                "name": "14",
+                                                                "type": "text",
+                                                                "label": "(O)"
+                                                            },
+                                                            {
+                                                                "name": "15",
+                                                                "type": "text",
+                                                                "label": "(P)"
+                                                            },
+                                                            {
+                                                                "name": "16",
+                                                                "type": "text",
+                                                                "label": "(Q)"
+                                                            },
+                                                            {
+                                                                "name": "17",
+                                                                "type": "text",
+                                                                "label": "(R)"
+                                                            },
+                                                            {
+                                                                "name": "18",
+                                                                "type": "text",
+                                                                "label": "(S)"
+                                                            },
+                                                            {
+                                                                "name": "19",
+                                                                "type": "text",
+                                                                "label": "(T)"
+                                                            },
+                                                            {
+                                                                "name": "20",
+                                                                "type": "text",
+                                                                "label": "(U)"
+                                                            },
+                                                            {
+                                                                "name": "21",
+                                                                "type": "text",
+                                                                "label": "(V)"
+                                                            },
+                                                            {
+                                                                "name": "22",
+                                                                "type": "text",
+                                                                "label": "(W)"
+                                                            },
+                                                            {
+                                                                "name": "23",
+                                                                "type": "text",
+                                                                "label": "(X)"
+                                                            },
+                                                            {
+                                                                "name": "24",
+                                                                "type": "text",
+                                                                "label": "(Y)"
+                                                            },
+                                                            {
+                                                                "name": "25",
+                                                                "type": "text",
+                                                                "label": "(Z)"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        {
+                                            "id": 24,
+                                            "module": "gateway:WebhookRespond",
+                                            "version": 1,
+                                            "parameters": {},
+                                            "mapper": {
+                                                "body": "Listo, {{4.data.nombre}}. Ya quedó anotado tu pedido.\r\nEl Dr. te escribe hoy mismo para confirmar el horario. Atiende hasta las 19, así que puede ser al mediodía o a la tarde.\r\nTe cuento que la consulta vale $20.000.",
+                                                "status": "200",
+                                                "headers": [
+                                                    {
+                                                        "key": "Content-Type",
+                                                        "value": "text/plain; charset=utf-8"
+                                                    }
+                                                ]
+                                            },
+                                            "metadata": {
+                                                "designer": {
+                                                    "x": 2412,
+                                                    "y": 609
+                                                },
+                                                "restore": {
+                                                    "expect": {
+                                                        "headers": {
+                                                            "mode": "chose",
+                                                            "items": [
+                                                                null
+                                                            ]
+                                                        }
+                                                    }
+                                                },
+                                                "expect": [
+                                                    {
+                                                        "name": "status",
+                                                        "type": "uinteger",
+                                                        "label": "Status",
+                                                        "required": true,
+                                                        "validate": {
+                                                            "min": 100
+                                                        }
+                                                    },
+                                                    {
+                                                        "name": "body",
+                                                        "type": "any",
+                                                        "label": "Body"
+                                                    },
+                                                    {
+                                                        "name": "headers",
+                                                        "spec": [
+                                                            {
+                                                                "name": "key",
+                                                                "type": "text",
+                                                                "label": "Key",
+                                                                "required": true,
+                                                                "validate": {
+                                                                    "max": 256
+                                                                }
+                                                            },
+                                                            {
+                                                                "name": "value",
+                                                                "type": "text",
+                                                                "label": "Value",
+                                                                "required": true,
+                                                                "validate": {
+                                                                    "max": 4096
+                                                                }
+                                                            }
+                                                        ],
+                                                        "type": "array",
+                                                        "label": "Custom headers",
+                                                        "validate": {
+                                                            "maxItems": 16
+                                                        }
+                                                    }
+                                                ],
+                                                "advanced": true
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "flow": [
+                                        {
+                                            "id": 28,
+                                            "module": "gateway:WebhookRespond",
+                                            "version": 1,
+                                            "parameters": {},
+                                            "filter": {
+                                                "name": "consulta",
+                                                "conditions": [
+                                                    [
+                                                        {
+                                                            "a": "{{4.data.estado}}",
+                                                            "b": "menu",
+                                                            "o": "text:equal"
+                                                        },
+                                                        {
+                                                            "a": "{{2.mensaje}}",
+                                                            "b": "2",
+                                                            "o": "number:equal"
+                                                        }
+                                                    ]
+                                                ]
+                                            },
+                                            "mapper": {
+                                                "body": "Te cuento lo principal:\r\n- Consulta: $20.000. El presupuesto del tratamiento lo da el Dr.  después de revisarte.\r\n- Obras sociales: trabajamos principalmente con Iasep y Sancor. Si tenés otra, consultale al Dr.\r\n- Trabajo particular.\r\n- Horarios: lunes a viernes de 7:30 a 11:30 y de 16 a 19.\r\n- Formas de pago: efectivo, débito, crédito y transferencia.\r\n¿Querés sacar un turno? Escribí 1.\r\nSi preferís hablar directamente con el Dr., escribí 3.",
+                                                "status": "200",
+                                                "headers": [
+                                                    {
+                                                        "key": "Content-Type: text/plain",
+                                                        "value": "charset=utf-8"
+                                                    }
+                                                ]
+                                            },
+                                            "metadata": {
+                                                "designer": {
+                                                    "x": 1200,
+                                                    "y": 450
+                                                },
+                                                "restore": {
+                                                    "expect": {
+                                                        "headers": {
+                                                            "mode": "chose",
+                                                            "items": [
+                                                                null
+                                                            ]
+                                                        }
+                                                    }
+                                                },
+                                                "expect": [
+                                                    {
+                                                        "name": "status",
+                                                        "type": "uinteger",
+                                                        "label": "Status",
+                                                        "required": true,
+                                                        "validate": {
+                                                            "min": 100
+                                                        }
+                                                    },
+                                                    {
+                                                        "name": "body",
+                                                        "type": "any",
+                                                        "label": "Body"
+                                                    },
+                                                    {
+                                                        "name": "headers",
+                                                        "spec": [
+                                                            {
+                                                                "name": "key",
+                                                                "type": "text",
+                                                                "label": "Key",
+                                                                "required": true,
+                                                                "validate": {
+                                                                    "max": 256
+                                                                }
+                                                            },
+                                                            {
+                                                                "name": "value",
+                                                                "type": "text",
+                                                                "label": "Value",
+                                                                "required": true,
+                                                                "validate": {
+                                                                    "max": 4096
+                                                                }
+                                                            }
+                                                        ],
+                                                        "type": "array",
+                                                        "label": "Custom headers",
+                                                        "validate": {
+                                                            "maxItems": 16
+                                                        }
+                                                    }
+                                                ],
+                                                "advanced": true
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "flow": [
+                                        {
+                                            "id": 30,
+                                            "module": "datastore:UpdateRecord",
+                                            "version": 1,
+                                            "parameters": {
+                                                "datastore": 135130
+                                            },
+                                            "filter": {
+                                                "name": "Derivar",
+                                                "conditions": [
+                                                    [
+                                                        {
+                                                            "a": "{{4.data.estado}}",
+                                                            "b": "menu",
+                                                            "o": "text:equal"
+                                                        },
+                                                        {
+                                                            "a": "{{2.mensaje}}",
+                                                            "b": "3",
+                                                            "o": "text:equal"
+                                                        }
+                                                    ]
+                                                ]
+                                            },
+                                            "mapper": {
+                                                "key": "{{2.telefono}}",
+                                                "upsert": true,
+                                                "overwriteArrays": false,
+                                                "data": {
+                                                    "estado": "derivado",
+                                                    "nombre": "",
+                                                    "preferencia": "",
+                                                    "ultima_actividad": "{{formatDate(now; \"DD/MM/YYYY - HH:mm\"; \"America/Argentina/Buenos_Aires\")}}"
+                                                }
+                                            },
+                                            "metadata": {
+                                                "designer": {
+                                                    "x": 1224,
+                                                    "y": 1231
+                                                },
+                                                "restore": {
+                                                    "parameters": {
+                                                        "datastore": {
+                                                            "label": "conversaciones"
+                                                        }
+                                                    },
+                                                    "expect": {
+                                                        "upsert": {
+                                                            "mode": "chose"
+                                                        },
+                                                        "overwriteArrays": {
+                                                            "mode": "chose"
+                                                        }
+                                                    }
+                                                },
+                                                "parameters": [
+                                                    {
+                                                        "name": "datastore",
+                                                        "type": "datastore",
+                                                        "label": "Data store",
+                                                        "required": true
+                                                    }
+                                                ],
+                                                "expect": [
+                                                    {
+                                                        "name": "key",
+                                                        "type": "text",
+                                                        "label": "Key",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "upsert",
+                                                        "type": "boolean",
+                                                        "label": "Insert missing record",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "overwriteArrays",
+                                                        "type": "boolean",
+                                                        "label": "Overwrite an existing array in the record",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "data",
+                                                        "type": "collection",
+                                                        "label": "Record",
+                                                        "spec": [
+                                                            {
+                                                                "name": "estado",
+                                                                "type": "text",
+                                                                "label": null
+                                                            },
+                                                            {
+                                                                "name": "nombre",
+                                                                "type": "text",
+                                                                "label": null
+                                                            },
+                                                            {
+                                                                "name": "preferencia",
+                                                                "type": "text",
+                                                                "label": null
+                                                            },
+                                                            {
+                                                                "name": "ultima_actividad",
+                                                                "type": "text",
+                                                                "label": null
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        {
+                                            "id": 31,
+                                            "module": "gateway:WebhookRespond",
+                                            "version": 1,
+                                            "parameters": {},
+                                            "mapper": {
+                                                "body": "Listo, ya le aviso al Dr. para que te escriba.\r\nSi es algo urgente o tenés dolor, avisame y le doy prioridad.",
+                                                "status": "200",
+                                                "headers": []
+                                            },
+                                            "metadata": {
+                                                "designer": {
+                                                    "x": 2402,
+                                                    "y": 1215
+                                                },
+                                                "restore": {
+                                                    "expect": {
+                                                        "headers": {
+                                                            "mode": "chose"
+                                                        }
+                                                    }
+                                                },
+                                                "expect": [
+                                                    {
+                                                        "name": "status",
+                                                        "type": "uinteger",
+                                                        "label": "Status",
+                                                        "required": true,
+                                                        "validate": {
+                                                            "min": 100
+                                                        }
+                                                    },
+                                                    {
+                                                        "name": "body",
+                                                        "type": "any",
+                                                        "label": "Body"
+                                                    },
+                                                    {
+                                                        "name": "headers",
+                                                        "spec": [
+                                                            {
+                                                                "name": "key",
+                                                                "type": "text",
+                                                                "label": "Key",
+                                                                "required": true,
+                                                                "validate": {
+                                                                    "max": 256
+                                                                }
+                                                            },
+                                                            {
+                                                                "name": "value",
+                                                                "type": "text",
+                                                                "label": "Value",
+                                                                "required": true,
+                                                                "validate": {
+                                                                    "max": 4096
+                                                                }
+                                                            }
+                                                        ],
+                                                        "type": "array",
+                                                        "label": "Custom headers",
+                                                        "validate": {
+                                                            "maxItems": 16
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "flow": [
+                        {
+                            "id": 27,
+                            "module": "gateway:WebhookRespond",
+                            "version": 1,
+                            "parameters": {},
+                            "filter": {
+                                "name": "Urgencia",
+                                "conditions": [
+                                    [
+                                        {
+                                            "a": "{{2.mensaje}}",
+                                            "b": "duele",
+                                            "o": "text:contain"
+                                        }
+                                    ],
+                                    [
+                                        {
+                                            "a": "{{2.mensaje}}",
+                                            "b": "hincha",
+                                            "o": "text:contain"
+                                        }
+                                    ],
+                                    [
+                                        {
+                                            "a": "{{2.mensaje}}",
+                                            "b": "molest",
+                                            "o": "text:contain"
+                                        }
+                                    ],
+                                    [
+                                        {
+                                            "a": "{{2.mensaje}}",
+                                            "b": "dolor",
+                                            "o": "text:contain"
+                                        }
+                                    ],
+                                    [
+                                        {
+                                            "a": "{{2.mensaje}}",
+                                            "b": "sens",
+                                            "o": "text:contain"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "mapper": {
+                                "body": "Si tenés dolor o alguna molestia, esto lo ve el Dr. directamente.\r\nYa le aviso para que te responda lo antes posible.",
+                                "status": "200",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type:",
+                                        "value": "text/plain; charset=utf-8"
+                                    }
+                                ]
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 545,
+                                    "y": 331
+                                },
+                                "restore": {
+                                    "expect": {
+                                        "headers": {
+                                            "mode": "chose",
+                                            "items": [
+                                                null
+                                            ]
+                                        }
+                                    }
+                                },
+                                "expect": [
+                                    {
+                                        "name": "status",
+                                        "type": "uinteger",
+                                        "label": "Status",
+                                        "required": true,
+                                        "validate": {
+                                            "min": 100
+                                        }
+                                    },
+                                    {
+                                        "name": "body",
+                                        "type": "any",
+                                        "label": "Body"
+                                    },
+                                    {
+                                        "name": "headers",
+                                        "spec": [
+                                            {
+                                                "name": "key",
+                                                "type": "text",
+                                                "label": "Key",
+                                                "required": true,
+                                                "validate": {
+                                                    "max": 256
+                                                }
+                                            },
+                                            {
+                                                "name": "value",
+                                                "type": "text",
+                                                "label": "Value",
+                                                "required": true,
+                                                "validate": {
+                                                    "max": 4096
+                                                }
+                                            }
+                                        ],
+                                        "type": "array",
+                                        "label": "Custom headers",
+                                        "validate": {
+                                            "maxItems": 16
+                                        }
+                                    }
+                                ],
+                                "advanced": true
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "metadata": {
+        "instant": true,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "us2.make.com",
+        "notes": []
+    }
+}
