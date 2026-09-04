@@ -557,3 +557,51 @@ planilla, el mensaje.
 quedó a medias más de 24 horas"* son una resta de fechas. Sobre un texto no
 se pueden construir — y cuando te das cuenta, los registros viejos ya
 quedaron así.
+
+---
+
+### Un comando no es un dato
+
+**Síntoma:** el bot pide el nombre, la persona toca un botón de un mensaje
+anterior, y el bot guarda `"info"` como su nombre. *"Gracias, info."*
+
+**Causa:** los botones de WhatsApp siguen funcionando **24 horas**. Scrollear
+para arriba y tocar uno es normal, no es un error del usuario. Y la rama que
+recogía el dato aceptaba cualquier cosa que llegara, sin distinguir entre una
+respuesta y una orden de navegación.
+
+**Solución:** separar los dos tipos de entrada.
+
+| | Vale en |
+|---|---|
+| **Comando** (`turno`, `info`, `doctor`, `1`, `2`, `3`) | cualquier estado |
+| **Dato** (un nombre, una preferencia) | solo donde se lo pidieron |
+
+- Las ramas de comando pierden la condición de estado fijo y solo exigen que
+  el registro exista.
+- Las ramas de datos agregan `Does not match pattern` con la lista de
+  comandos.
+
+**Regla:** si alguien toca un botón, quiso navegar. **El comando gana
+siempre**, y el dato que estaba a medias se vuelve a pedir.
+
+---
+
+### Una palabra clave no puede robarle la respuesta a una pregunta
+
+**Síntoma:** el bot pregunta *"¿qué días te vienen mejor?"*, la persona
+contesta *"cuanto antes, cualquier horario"*, y recibe el bloque de precios.
+
+**Causa:** el filtro que detecta preguntas buscaba `cuanto` y `horario` como
+subcadenas, **en cualquier estado**. Una respuesta legítima las contenía.
+
+**Solución:** partir la condición en dos bloques unidos por OR.
+
+```
+Bloque 1:  el botón exacto        → vale en cualquier estado
+Bloque 2:  las palabras sueltas   → solo cuando no se está esperando nada
+```
+
+**Regla:** un botón es inequívoco —si lo tocó, lo quiso tocar—. Una palabra
+adentro de una frase es una adivinanza, y adivinar solo se justifica cuando
+la persona no está contestando una pregunta.
