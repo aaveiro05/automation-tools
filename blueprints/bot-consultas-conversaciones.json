@@ -12,8 +12,8 @@
             "mapper": {},
             "metadata": {
                 "designer": {
-                    "x": -114,
-                    "y": -4
+                    "x": 0,
+                    "y": 1050
                 },
                 "restore": {
                     "parameters": {
@@ -51,15 +51,195 @@
             }
         },
         {
-            "id": 25,
-            "module": "builtin:BasicRouter",
+            "id": 49,
+            "module": "gateway:WebhookRespond",
             "version": 1,
+            "parameters": {},
             "filter": null,
-            "mapper": null,
+            "mapper": {
+                "body": "{{2.hub.challenge}}",
+                "status": "200",
+                "headers": []
+            },
             "metadata": {
                 "designer": {
                     "x": 300,
-                    "y": 0
+                    "y": 1050
+                },
+                "restore": {
+                    "expect": {
+                        "headers": {
+                            "mode": "chose"
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "status",
+                        "type": "uinteger",
+                        "label": "Status",
+                        "required": true,
+                        "validate": {
+                            "min": 100
+                        }
+                    },
+                    {
+                        "name": "body",
+                        "type": "any",
+                        "label": "Body"
+                    },
+                    {
+                        "name": "headers",
+                        "spec": [
+                            {
+                                "name": "key",
+                                "type": "text",
+                                "label": "Key",
+                                "required": true,
+                                "validate": {
+                                    "max": 256
+                                }
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value",
+                                "required": true,
+                                "validate": {
+                                    "max": 4096
+                                }
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Custom headers",
+                        "validate": {
+                            "maxItems": 16
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "id": 33,
+            "module": "util:SetVariables",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "scope": "roundtrip",
+                "variables": [
+                    {
+                        "name": "telefono",
+                        "value": "{{2.entry[1].changes[1].value.messages[1].from}}"
+                    },
+                    {
+                        "name": "mensaje",
+                        "value": "{{2.entry[1].changes[1].value.messages[1].text.body}}"
+                    },
+                    {
+                        "name": "tipo",
+                        "value": "{{2.entry[1].changes[1].value.messages[1].type}}"
+                    },
+                    {
+                        "name": "nombre_wa",
+                        "value": "{{2.entry[1].changes[1].value.contacts[1].profile.name}}"
+                    }
+                ]
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 1050
+                },
+                "restore": {
+                    "expect": {
+                        "scope": {
+                            "label": "One cycle"
+                        },
+                        "variables": {
+                            "items": [
+                                null,
+                                null,
+                                null,
+                                null
+                            ]
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "variables",
+                        "spec": {
+                            "name": "value",
+                            "spec": [
+                                {
+                                    "name": "name",
+                                    "type": "text",
+                                    "label": "Variable name",
+                                    "required": true
+                                },
+                                {
+                                    "name": "value",
+                                    "type": "any",
+                                    "label": "Variable value"
+                                }
+                            ],
+                            "type": "collection",
+                            "label": "Variable"
+                        },
+                        "type": "array",
+                        "label": "Variables",
+                        "validate": {
+                            "unique": {
+                                "by": "name"
+                            }
+                        }
+                    },
+                    {
+                        "name": "scope",
+                        "type": "select",
+                        "label": "Variable lifetime",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "roundtrip",
+                                "execution"
+                            ]
+                        }
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "telefono",
+                        "type": "any",
+                        "label": "telefono"
+                    },
+                    {
+                        "name": "mensaje",
+                        "type": "any",
+                        "label": "mensaje"
+                    },
+                    {
+                        "name": "tipo",
+                        "type": "any",
+                        "label": "tipo"
+                    },
+                    {
+                        "name": "nombre_wa",
+                        "type": "any",
+                        "label": "nombre_wa"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 25,
+            "module": "builtin:BasicRouter",
+            "version": 1,
+            "mapper": null,
+            "metadata": {
+                "designer": {
+                    "x": 900,
+                    "y": 1050
                 }
             },
             "routes": [
@@ -77,46 +257,50 @@
                                 "conditions": [
                                     [
                                         {
-                                            "a": "{{2.mensaje}}",
+                                            "a": "{{33.mensaje}}",
                                             "b": "dolor",
                                             "o": "text:notcontain"
                                         },
                                         {
-                                            "a": "{{2.mensaje}}",
+                                            "a": "{{33.mensaje}}",
                                             "b": "duele",
                                             "o": "text:notcontain"
                                         },
                                         {
-                                            "a": "{{2.mensaje}}",
+                                            "a": "{{33.mensaje}}",
                                             "b": "molest",
                                             "o": "text:notcontain"
                                         },
                                         {
-                                            "a": "{{2.mensaje}}",
+                                            "a": "{{33.mensaje}}",
                                             "b": "hinch",
                                             "o": "text:notcontain"
                                         },
                                         {
-                                            "a": "{{2.mensaje}}",
+                                            "a": "{{33.mensaje}}",
                                             "b": "sens",
                                             "o": "text:notcontain"
                                         },
                                         {
-                                            "a": "{{2.mensaje}}",
+                                            "a": "{{33.mensaje}}",
                                             "b": "urgen",
                                             "o": "text:notcontain"
+                                        },
+                                        {
+                                            "a": "{{33.mensaje}}",
+                                            "o": "exist"
                                         }
                                     ]
                                 ]
                             },
                             "mapper": {
-                                "key": "{{2.telefono}}",
+                                "key": "{{33.telefono}}",
                                 "returnWrapped": true
                             },
                             "metadata": {
                                 "designer": {
-                                    "x": 600,
-                                    "y": -300
+                                    "x": 1200,
+                                    "y": 600
                                 },
                                 "restore": {
                                     "parameters": {
@@ -195,8 +379,8 @@
                             "mapper": null,
                             "metadata": {
                                 "designer": {
-                                    "x": 900,
-                                    "y": 0
+                                    "x": 1500,
+                                    "y": 750
                                 }
                             },
                             "routes": [
@@ -221,30 +405,31 @@
                                                 ]
                                             },
                                             "mapper": {
-                                                "key": "{{2.telefono}}",
-                                                "overwrite": true,
+                                                "key": "{{33.telefono}}",
                                                 "data": {
                                                     "estado": "menu",
                                                     "nombre": "",
                                                     "preferencia": "",
-                                                    "ultima_actividad": "{{formatDate(now; \"DD/MM/YYYY - HH:mm\"; \"America/Argentina/Buenos_Aires \")}}"
-                                                }
+                                                    "primer_mensaje": "{{33.mensaje}}",
+                                                    "ultima_actividad": "{{now}}"
+                                                },
+                                                "overwrite": true
                                             },
                                             "metadata": {
                                                 "designer": {
-                                                    "x": 1200,
-                                                    "y": -750,
+                                                    "x": 1800,
+                                                    "y": 8,
                                                     "name": "primera vez"
                                                 },
                                                 "restore": {
-                                                    "parameters": {
-                                                        "datastore": {
-                                                            "label": "conversaciones"
-                                                        }
-                                                    },
                                                     "expect": {
                                                         "overwrite": {
                                                             "mode": "chose"
+                                                        }
+                                                    },
+                                                    "parameters": {
+                                                        "datastore": {
+                                                            "label": "conversaciones"
                                                         }
                                                     }
                                                 },
@@ -270,8 +455,6 @@
                                                     },
                                                     {
                                                         "name": "data",
-                                                        "type": "collection",
-                                                        "label": "Record",
                                                         "spec": [
                                                             {
                                                                 "name": "estado",
@@ -290,90 +473,132 @@
                                                             },
                                                             {
                                                                 "name": "ultima_actividad",
+                                                                "type": "date",
+                                                                "label": null
+                                                            },
+                                                            {
+                                                                "name": "primer_mensaje",
                                                                 "type": "text",
                                                                 "label": null
                                                             }
-                                                        ]
+                                                        ],
+                                                        "type": "collection",
+                                                        "label": "Record"
                                                     }
                                                 ]
                                             }
                                         },
                                         {
-                                            "id": 11,
-                                            "module": "gateway:WebhookRespond",
+                                            "id": 38,
+                                            "module": "whatsapp-business-cloud:sendMessage",
                                             "version": 1,
-                                            "parameters": {},
+                                            "parameters": {
+                                                "__IMTCONN__": 10726129
+                                            },
                                             "mapper": {
-                                                "body": "Hola, soy el asistente virtual de Juan. ¿En qué te puedo ayudar?\n1 - Sacar un turno\r\n2 - Tengo una consulta\r\n3 - Hablar con el Dr. Aveiro",
-                                                "status": "200",
-                                                "headers": [
-                                                    {
-                                                        "key": "Content-Type",
-                                                        "value": "text/plain; charset=utf-8"
-                                                    }
-                                                ]
+                                                "to": "{{54 + substring(33.telefono; 3; 6) + 15 + substring(33.telefono; 6)}}",
+                                                "text": {
+                                                    "body": "Hola, soy el asistente virtual del consultorio del Dr. Aveiro. ¿En qué te puedo ayudar?\n\n1 - Sacar un turno\n2 - Tengo una consulta\n3 - Hablar con el Dr. Aveiro",
+                                                    "preview_url": false
+                                                },
+                                                "type": "text",
+                                                "fromId": "1265507849982857"
                                             },
                                             "metadata": {
                                                 "designer": {
-                                                    "x": 2225,
-                                                    "y": -843,
-                                                    "name": "primera agenda"
+                                                    "x": 2415,
+                                                    "y": -9
                                                 },
                                                 "restore": {
                                                     "expect": {
-                                                        "headers": {
+                                                        "text": {
+                                                            "nested": {
+                                                                "preview_url": {
+                                                                    "mode": "chose"
+                                                                }
+                                                            }
+                                                        },
+                                                        "type": {
+                                                            "label": "Text"
+                                                        },
+                                                        "fromId": {
                                                             "mode": "chose",
-                                                            "items": [
-                                                                null
-                                                            ]
+                                                            "label": "Test Number (+1 555-200-6972)"
+                                                        }
+                                                    },
+                                                    "parameters": {
+                                                        "__IMTCONN__": {
+                                                            "data": {
+                                                                "scoped": "true",
+                                                                "connection": "whatsapp-business-cloud2"
+                                                            },
+                                                            "label": "WhatsApp - Consultorio Aveiro (Employee)"
                                                         }
                                                     }
                                                 },
+                                                "parameters": [
+                                                    {
+                                                        "name": "__IMTCONN__",
+                                                        "type": "account:whatsapp-business-cloud,whatsapp-business-cloud2",
+                                                        "label": "Connection",
+                                                        "required": true
+                                                    }
+                                                ],
                                                 "expect": [
                                                     {
-                                                        "name": "status",
-                                                        "type": "uinteger",
-                                                        "label": "Status",
+                                                        "name": "fromId",
+                                                        "type": "select",
+                                                        "label": "Sender ID",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "to",
+                                                        "type": "text",
+                                                        "label": "Receiver",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "type",
+                                                        "type": "select",
+                                                        "label": "Message Type",
                                                         "required": true,
                                                         "validate": {
-                                                            "min": 100
+                                                            "enum": [
+                                                                "text",
+                                                                "image",
+                                                                "audio",
+                                                                "video",
+                                                                "document",
+                                                                "sticker",
+                                                                "location",
+                                                                "contacts",
+                                                                "interactive"
+                                                            ]
                                                         }
                                                     },
                                                     {
-                                                        "name": "body",
-                                                        "type": "any",
-                                                        "label": "Body"
-                                                    },
-                                                    {
-                                                        "name": "headers",
+                                                        "name": "text",
                                                         "spec": [
                                                             {
-                                                                "name": "key",
+                                                                "name": "body",
                                                                 "type": "text",
-                                                                "label": "Key",
-                                                                "required": true,
-                                                                "validate": {
-                                                                    "max": 256
-                                                                }
-                                                            },
-                                                            {
-                                                                "name": "value",
-                                                                "type": "text",
-                                                                "label": "Value",
+                                                                "label": "Body",
                                                                 "required": true,
                                                                 "validate": {
                                                                     "max": 4096
                                                                 }
+                                                            },
+                                                            {
+                                                                "name": "preview_url",
+                                                                "type": "boolean",
+                                                                "label": "Preview URL",
+                                                                "required": true
                                                             }
                                                         ],
-                                                        "type": "array",
-                                                        "label": "Custom headers",
-                                                        "validate": {
-                                                            "maxItems": 16
-                                                        }
+                                                        "type": "collection",
+                                                        "label": "Text"
                                                     }
-                                                ],
-                                                "advanced": true
+                                                ]
                                             }
                                         }
                                     ]
@@ -381,8 +606,8 @@
                                 {
                                     "flow": [
                                         {
-                                            "id": 12,
-                                            "module": "datastore:AddRecord",
+                                            "id": 51,
+                                            "module": "datastore:UpdateRecord",
                                             "version": 1,
                                             "parameters": {
                                                 "datastore": 135130
@@ -392,7 +617,7 @@
                                                 "conditions": [
                                                     [
                                                         {
-                                                            "a": "{{2.mensaje}}",
+                                                            "a": "{{33.mensaje}}",
                                                             "b": "1",
                                                             "o": "text:equal"
                                                         },
@@ -405,29 +630,34 @@
                                                 ]
                                             },
                                             "mapper": {
-                                                "key": "{{2.telefono}}",
-                                                "overwrite": true,
+                                                "key": "{{33.telefono}}",
                                                 "data": {
                                                     "estado": "pidiendo_nombre",
                                                     "nombre": "",
                                                     "preferencia": "",
-                                                    "ultima_actividad": "{{formatDate(now; \"DD/MM/YYYY - HH:mm\"; \"America/Argentina/Buenos_Aires\")}}"
-                                                }
+                                                    "primer_mensaje": "{{4.Record.primer_mensaje}}",
+                                                    "ultima_actividad": "{{formatDate(now; \"DD/MM/YYYY - HH:mm\"; \"America/Argentina/Buenos_Aires\")}} "
+                                                },
+                                                "upsert": true,
+                                                "overwriteArrays": false
                                             },
                                             "metadata": {
                                                 "designer": {
-                                                    "x": 1200,
-                                                    "y": -450
+                                                    "x": 1881,
+                                                    "y": 293
                                                 },
                                                 "restore": {
+                                                    "expect": {
+                                                        "upsert": {
+                                                            "mode": "chose"
+                                                        },
+                                                        "overwriteArrays": {
+                                                            "mode": "chose"
+                                                        }
+                                                    },
                                                     "parameters": {
                                                         "datastore": {
                                                             "label": "conversaciones"
-                                                        }
-                                                    },
-                                                    "expect": {
-                                                        "overwrite": {
-                                                            "mode": "chose"
                                                         }
                                                     }
                                                 },
@@ -443,18 +673,23 @@
                                                     {
                                                         "name": "key",
                                                         "type": "text",
-                                                        "label": "Key"
+                                                        "label": "Key",
+                                                        "required": true
                                                     },
                                                     {
-                                                        "name": "overwrite",
+                                                        "name": "upsert",
                                                         "type": "boolean",
-                                                        "label": "Overwrite an existing record",
+                                                        "label": "Insert missing record",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "overwriteArrays",
+                                                        "type": "boolean",
+                                                        "label": "Overwrite an existing array in the record",
                                                         "required": true
                                                     },
                                                     {
                                                         "name": "data",
-                                                        "type": "collection",
-                                                        "label": "Record",
                                                         "spec": [
                                                             {
                                                                 "name": "estado",
@@ -475,87 +710,130 @@
                                                                 "name": "ultima_actividad",
                                                                 "type": "text",
                                                                 "label": null
+                                                            },
+                                                            {
+                                                                "name": "primer_mensaje",
+                                                                "type": "text",
+                                                                "label": null
                                                             }
-                                                        ]
+                                                        ],
+                                                        "type": "collection",
+                                                        "label": "Record"
                                                     }
                                                 ]
                                             }
                                         },
                                         {
-                                            "id": 13,
-                                            "module": "gateway:WebhookRespond",
+                                            "id": 39,
+                                            "module": "whatsapp-business-cloud:sendMessage",
                                             "version": 1,
-                                            "parameters": {},
+                                            "parameters": {
+                                                "__IMTCONN__": 10726129
+                                            },
                                             "mapper": {
-                                                "body": "Perfecto. ¿Cómo te llamás?",
-                                                "status": "200",
-                                                "headers": [
-                                                    {
-                                                        "key": "Content-Type",
-                                                        "value": "text/plain; charset=utf-8"
-                                                    }
-                                                ]
+                                                "to": "{{54 + substring(33.telefono; 3; 6) + 15 + substring(33.telefono; 6)}}",
+                                                "text": {
+                                                    "body": "Perfecto. ¿Cómo te llamás?",
+                                                    "preview_url": false
+                                                },
+                                                "type": "text",
+                                                "fromId": "1265507849982857"
                                             },
                                             "metadata": {
                                                 "designer": {
-                                                    "x": 2271,
-                                                    "y": -363
+                                                    "x": 2449,
+                                                    "y": 280
                                                 },
                                                 "restore": {
                                                     "expect": {
-                                                        "headers": {
+                                                        "text": {
+                                                            "nested": {
+                                                                "preview_url": {
+                                                                    "mode": "chose"
+                                                                }
+                                                            }
+                                                        },
+                                                        "type": {
+                                                            "label": "Text"
+                                                        },
+                                                        "fromId": {
                                                             "mode": "chose",
-                                                            "items": [
-                                                                null
-                                                            ]
+                                                            "label": "Test Number (+1 555-200-6972)"
+                                                        }
+                                                    },
+                                                    "parameters": {
+                                                        "__IMTCONN__": {
+                                                            "data": {
+                                                                "scoped": "true",
+                                                                "connection": "whatsapp-business-cloud2"
+                                                            },
+                                                            "label": "WhatsApp - Consultorio Aveiro (Employee)"
                                                         }
                                                     }
                                                 },
+                                                "parameters": [
+                                                    {
+                                                        "name": "__IMTCONN__",
+                                                        "type": "account:whatsapp-business-cloud,whatsapp-business-cloud2",
+                                                        "label": "Connection",
+                                                        "required": true
+                                                    }
+                                                ],
                                                 "expect": [
                                                     {
-                                                        "name": "status",
-                                                        "type": "uinteger",
-                                                        "label": "Status",
+                                                        "name": "fromId",
+                                                        "type": "select",
+                                                        "label": "Sender ID",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "to",
+                                                        "type": "text",
+                                                        "label": "Receiver",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "type",
+                                                        "type": "select",
+                                                        "label": "Message Type",
                                                         "required": true,
                                                         "validate": {
-                                                            "min": 100
+                                                            "enum": [
+                                                                "text",
+                                                                "image",
+                                                                "audio",
+                                                                "video",
+                                                                "document",
+                                                                "sticker",
+                                                                "location",
+                                                                "contacts",
+                                                                "interactive"
+                                                            ]
                                                         }
                                                     },
                                                     {
-                                                        "name": "body",
-                                                        "type": "any",
-                                                        "label": "Body"
-                                                    },
-                                                    {
-                                                        "name": "headers",
+                                                        "name": "text",
                                                         "spec": [
                                                             {
-                                                                "name": "key",
+                                                                "name": "body",
                                                                 "type": "text",
-                                                                "label": "Key",
-                                                                "required": true,
-                                                                "validate": {
-                                                                    "max": 256
-                                                                }
-                                                            },
-                                                            {
-                                                                "name": "value",
-                                                                "type": "text",
-                                                                "label": "Value",
+                                                                "label": "Body",
                                                                 "required": true,
                                                                 "validate": {
                                                                     "max": 4096
                                                                 }
+                                                            },
+                                                            {
+                                                                "name": "preview_url",
+                                                                "type": "boolean",
+                                                                "label": "Preview URL",
+                                                                "required": true
                                                             }
                                                         ],
-                                                        "type": "array",
-                                                        "label": "Custom headers",
-                                                        "validate": {
-                                                            "maxItems": 16
-                                                        }
+                                                        "type": "collection",
+                                                        "label": "Text"
                                                     }
-                                                ],
-                                                "advanced": true
+                                                ]
                                             }
                                         }
                                     ]
@@ -582,33 +860,34 @@
                                                 ]
                                             },
                                             "mapper": {
-                                                "key": "{{2.telefono}}",
-                                                "upsert": true,
-                                                "overwriteArrays": false,
+                                                "key": "{{33.telefono}}",
                                                 "data": {
                                                     "estado": "pidiendo_preferencia",
-                                                    "nombre": "{{2.mensaje}}",
+                                                    "nombre": "{{33.mensaje}}",
                                                     "preferencia": "",
-                                                    "ultima_actividad": "{{formatDate(now; \"DD/MM/YYYY - HH:mm\"; \"America/Argentina/Buenos_Aires\")}}"
-                                                }
+                                                    "primer_mensaje": "",
+                                                    "ultima_actividad": "{{now}}"
+                                                },
+                                                "upsert": true,
+                                                "overwriteArrays": false
                                             },
                                             "metadata": {
                                                 "designer": {
-                                                    "x": 1200,
-                                                    "y": -150
+                                                    "x": 1800,
+                                                    "y": 600
                                                 },
                                                 "restore": {
-                                                    "parameters": {
-                                                        "datastore": {
-                                                            "label": "conversaciones"
-                                                        }
-                                                    },
                                                     "expect": {
                                                         "upsert": {
                                                             "mode": "chose"
                                                         },
                                                         "overwriteArrays": {
                                                             "mode": "chose"
+                                                        }
+                                                    },
+                                                    "parameters": {
+                                                        "datastore": {
+                                                            "label": "conversaciones"
                                                         }
                                                     }
                                                 },
@@ -641,8 +920,6 @@
                                                     },
                                                     {
                                                         "name": "data",
-                                                        "type": "collection",
-                                                        "label": "Record",
                                                         "spec": [
                                                             {
                                                                 "name": "estado",
@@ -661,89 +938,132 @@
                                                             },
                                                             {
                                                                 "name": "ultima_actividad",
+                                                                "type": "date",
+                                                                "label": null
+                                                            },
+                                                            {
+                                                                "name": "primer_mensaje",
                                                                 "type": "text",
                                                                 "label": null
                                                             }
-                                                        ]
+                                                        ],
+                                                        "type": "collection",
+                                                        "label": "Record"
                                                     }
                                                 ]
                                             }
                                         },
                                         {
-                                            "id": 17,
-                                            "module": "gateway:WebhookRespond",
+                                            "id": 43,
+                                            "module": "whatsapp-business-cloud:sendMessage",
                                             "version": 1,
-                                            "parameters": {},
+                                            "parameters": {
+                                                "__IMTCONN__": 10726129
+                                            },
                                             "mapper": {
-                                                "body": "Gracias,{{2.mensaje}}. ¿Qué días u horarios te vienen mejor?",
-                                                "status": "200",
-                                                "headers": [
-                                                    {
-                                                        "key": "Content-Type",
-                                                        "value": "text/plain; charset=utf-8"
-                                                    }
-                                                ]
+                                                "to": "{{54 + substring(33.telefono; 3; 6) + 15 + substring(33.telefono; 6)}}",
+                                                "text": {
+                                                    "body": "Gracias, {{33.mensaje}}. ¿Qué días u horarios te vienen mejor?",
+                                                    "preview_url": false
+                                                },
+                                                "type": "text",
+                                                "fromId": "1265507849982857"
                                             },
                                             "metadata": {
                                                 "designer": {
-                                                    "x": 2287,
-                                                    "y": 87
+                                                    "x": 2403,
+                                                    "y": 609
                                                 },
                                                 "restore": {
                                                     "expect": {
-                                                        "headers": {
+                                                        "text": {
+                                                            "nested": {
+                                                                "preview_url": {
+                                                                    "mode": "chose"
+                                                                }
+                                                            }
+                                                        },
+                                                        "type": {
+                                                            "label": "Text"
+                                                        },
+                                                        "fromId": {
                                                             "mode": "chose",
-                                                            "items": [
-                                                                null
-                                                            ]
+                                                            "label": "Test Number (+1 555-200-6972)"
+                                                        }
+                                                    },
+                                                    "parameters": {
+                                                        "__IMTCONN__": {
+                                                            "data": {
+                                                                "scoped": "true",
+                                                                "connection": "whatsapp-business-cloud2"
+                                                            },
+                                                            "label": "WhatsApp - Consultorio Aveiro (Employee)"
                                                         }
                                                     }
                                                 },
+                                                "parameters": [
+                                                    {
+                                                        "name": "__IMTCONN__",
+                                                        "type": "account:whatsapp-business-cloud,whatsapp-business-cloud2",
+                                                        "label": "Connection",
+                                                        "required": true
+                                                    }
+                                                ],
                                                 "expect": [
                                                     {
-                                                        "name": "status",
-                                                        "type": "uinteger",
-                                                        "label": "Status",
+                                                        "name": "fromId",
+                                                        "type": "select",
+                                                        "label": "Sender ID",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "to",
+                                                        "type": "text",
+                                                        "label": "Receiver",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "type",
+                                                        "type": "select",
+                                                        "label": "Message Type",
                                                         "required": true,
                                                         "validate": {
-                                                            "min": 100
+                                                            "enum": [
+                                                                "text",
+                                                                "image",
+                                                                "audio",
+                                                                "video",
+                                                                "document",
+                                                                "sticker",
+                                                                "location",
+                                                                "contacts",
+                                                                "interactive"
+                                                            ]
                                                         }
                                                     },
                                                     {
-                                                        "name": "body",
-                                                        "type": "any",
-                                                        "label": "Body"
-                                                    },
-                                                    {
-                                                        "name": "headers",
+                                                        "name": "text",
                                                         "spec": [
                                                             {
-                                                                "name": "key",
+                                                                "name": "body",
                                                                 "type": "text",
-                                                                "label": "Key",
-                                                                "required": true,
-                                                                "validate": {
-                                                                    "max": 256
-                                                                }
-                                                            },
-                                                            {
-                                                                "name": "value",
-                                                                "type": "text",
-                                                                "label": "Value",
+                                                                "label": "Body",
                                                                 "required": true,
                                                                 "validate": {
                                                                     "max": 4096
                                                                 }
+                                                            },
+                                                            {
+                                                                "name": "preview_url",
+                                                                "type": "boolean",
+                                                                "label": "Preview URL",
+                                                                "required": true
                                                             }
                                                         ],
-                                                        "type": "array",
-                                                        "label": "Custom headers",
-                                                        "validate": {
-                                                            "maxItems": 16
-                                                        }
+                                                        "type": "collection",
+                                                        "label": "Text"
                                                     }
-                                                ],
-                                                "advanced": true
+                                                ]
                                             }
                                         }
                                     ]
@@ -770,33 +1090,34 @@
                                                 ]
                                             },
                                             "mapper": {
-                                                "key": "{{2.telefono}}",
-                                                "upsert": true,
-                                                "overwriteArrays": false,
+                                                "key": "{{33.telefono}}",
                                                 "data": {
                                                     "estado": "completo",
                                                     "nombre": "",
-                                                    "preferencia": "{{2.mensaje}}",
-                                                    "ultima_actividad": "{{formatDate(now; \"DD/MM/YYYY - HH:mm\"; \"America/Argentina/Buenos_Aires\")}}"
-                                                }
+                                                    "preferencia": "{{33.mensaje}}",
+                                                    "primer_mensaje": "",
+                                                    "ultima_actividad": "{{now}}"
+                                                },
+                                                "upsert": true,
+                                                "overwriteArrays": false
                                             },
                                             "metadata": {
                                                 "designer": {
-                                                    "x": 1200,
-                                                    "y": 150
+                                                    "x": 1800,
+                                                    "y": 900
                                                 },
                                                 "restore": {
-                                                    "parameters": {
-                                                        "datastore": {
-                                                            "label": "conversaciones"
-                                                        }
-                                                    },
                                                     "expect": {
                                                         "upsert": {
                                                             "mode": "chose"
                                                         },
                                                         "overwriteArrays": {
                                                             "mode": "chose"
+                                                        }
+                                                    },
+                                                    "parameters": {
+                                                        "datastore": {
+                                                            "label": "conversaciones"
                                                         }
                                                     }
                                                 },
@@ -829,8 +1150,6 @@
                                                     },
                                                     {
                                                         "name": "data",
-                                                        "type": "collection",
-                                                        "label": "Record",
                                                         "spec": [
                                                             {
                                                                 "name": "estado",
@@ -849,10 +1168,17 @@
                                                             },
                                                             {
                                                                 "name": "ultima_actividad",
+                                                                "type": "date",
+                                                                "label": null
+                                                            },
+                                                            {
+                                                                "name": "primer_mensaje",
                                                                 "type": "text",
                                                                 "label": null
                                                             }
-                                                        ]
+                                                        ],
+                                                        "type": "collection",
+                                                        "label": "Record"
                                                     }
                                                 ]
                                             }
@@ -865,70 +1191,72 @@
                                                 "__IMTCONN__": 10428105
                                             },
                                             "mapper": {
-                                                "mode": "select",
-                                                "insertUnformatted": false,
-                                                "valueInputOption": "USER_ENTERED",
-                                                "insertDataOption": "INSERT_ROWS",
                                                 "from": "drive",
-                                                "spreadsheetId": "/1ah4YbV10Gf3NSgBnOh6uno0Kxpb2nxFyAvI4J7gWTGE",
-                                                "sheetId": "Hoja 1",
-                                                "includesHeaders": true,
-                                                "useColumnHeaders": false,
+                                                "mode": "select",
                                                 "values": {
                                                     "0": "{{formatDate(now; \"DD/MM/YYYY - HH:mm \"; \"America/Argentina/Buenos_Aires\")}}",
                                                     "1": "{{4.data.nombre}}",
-                                                    "2": "{{2.telefono}}",
-                                                    "3": "{{2.mensaje}}",
+                                                    "2": "{{33.telefono}}",
+                                                    "3": "{{33.mensaje}}",
                                                     "4": "pendiente",
-                                                    "5": "https://wa.me/{{2.telefono}}"
-                                                }
+                                                    "5": "https://wa.me/{{33.telefono}}",
+                                                    "6": "{{4.Record.primer_mensaje}}",
+                                                    "7": "{{33.nombre_wa}}"
+                                                },
+                                                "sheetId": "Hoja 1",
+                                                "spreadsheetId": "/1ah4YbV10Gf3NSgBnOh6uno0Kxpb2nxFyAvI4J7gWTGE",
+                                                "includesHeaders": true,
+                                                "insertDataOption": "INSERT_ROWS",
+                                                "useColumnHeaders": false,
+                                                "valueInputOption": "USER_ENTERED",
+                                                "insertUnformatted": false
                                             },
                                             "metadata": {
                                                 "designer": {
-                                                    "x": 1878,
-                                                    "y": 600
+                                                    "x": 2100,
+                                                    "y": 900
                                                 },
                                                 "restore": {
-                                                    "parameters": {
-                                                        "__IMTCONN__": {
-                                                            "label": "alej0's Google connection (alejoaveiro05@gmail.com)",
-                                                            "data": {
-                                                                "scoped": "true",
-                                                                "connection": "google"
-                                                            }
-                                                        }
-                                                    },
                                                     "expect": {
+                                                        "from": {
+                                                            "label": "My Drive"
+                                                        },
                                                         "mode": {
                                                             "label": "Search by path"
                                                         },
-                                                        "insertUnformatted": {
-                                                            "mode": "chose"
-                                                        },
-                                                        "valueInputOption": {
-                                                            "mode": "chose",
-                                                            "label": "User entered"
-                                                        },
-                                                        "insertDataOption": {
-                                                            "mode": "chose",
-                                                            "label": "Insert rows"
-                                                        },
-                                                        "from": {
-                                                            "label": "My Drive"
+                                                        "sheetId": {
+                                                            "label": "Hoja 1"
                                                         },
                                                         "spreadsheetId": {
                                                             "path": [
                                                                 "pedidos"
                                                             ]
                                                         },
-                                                        "sheetId": {
-                                                            "label": "Hoja 1"
-                                                        },
                                                         "includesHeaders": {
                                                             "label": "Yes"
                                                         },
+                                                        "insertDataOption": {
+                                                            "mode": "chose",
+                                                            "label": "Insert rows"
+                                                        },
                                                         "useColumnHeaders": {
                                                             "label": "No"
+                                                        },
+                                                        "valueInputOption": {
+                                                            "mode": "chose",
+                                                            "label": "User entered"
+                                                        },
+                                                        "insertUnformatted": {
+                                                            "mode": "chose"
+                                                        }
+                                                    },
+                                                    "parameters": {
+                                                        "__IMTCONN__": {
+                                                            "data": {
+                                                                "scoped": "true",
+                                                                "connection": "google"
+                                                            },
+                                                            "label": "alej0's Google connection (alejoaveiro05@gmail.com)"
                                                         }
                                                     }
                                                 },
@@ -1034,20 +1362,6 @@
                                                     },
                                                     {
                                                         "name": "values",
-                                                        "type": "collection",
-                                                        "label": "Values in columns",
-                                                        "metadata": [
-                                                            [
-                                                                [
-                                                                    "fecha",
-                                                                    "nombre",
-                                                                    "teléfono",
-                                                                    "preferencias",
-                                                                    "gestión",
-                                                                    "escribir"
-                                                                ]
-                                                            ]
-                                                        ],
                                                         "spec": [
                                                             {
                                                                 "name": "0",
@@ -1082,12 +1396,12 @@
                                                             {
                                                                 "name": "6",
                                                                 "type": "text",
-                                                                "label": "(G)"
+                                                                "label": "primer_mensaje (G)"
                                                             },
                                                             {
                                                                 "name": "7",
                                                                 "type": "text",
-                                                                "label": "(H)"
+                                                                "label": "nombre_wa (H)"
                                                             },
                                                             {
                                                                 "name": "8",
@@ -1179,86 +1493,138 @@
                                                                 "type": "text",
                                                                 "label": "(Z)"
                                                             }
+                                                        ],
+                                                        "type": "collection",
+                                                        "label": "Values in columns",
+                                                        "metadata": [
+                                                            [
+                                                                [
+                                                                    "fecha",
+                                                                    "nombre",
+                                                                    "teléfono",
+                                                                    "preferencias",
+                                                                    "gestión",
+                                                                    "escribir",
+                                                                    "primer_mensaje",
+                                                                    "nombre_wa"
+                                                                ]
+                                                            ]
                                                         ]
                                                     }
                                                 ]
                                             }
                                         },
                                         {
-                                            "id": 24,
-                                            "module": "gateway:WebhookRespond",
+                                            "id": 41,
+                                            "module": "whatsapp-business-cloud:sendMessage",
                                             "version": 1,
-                                            "parameters": {},
+                                            "parameters": {
+                                                "__IMTCONN__": 10726129
+                                            },
                                             "mapper": {
-                                                "body": "Listo, {{4.data.nombre}}. Ya quedó anotado tu pedido.\r\nEl Dr. te escribe hoy mismo para confirmar el horario. Atiende hasta las 19, así que puede ser al mediodía o a la tarde.\r\nTe cuento que la consulta vale $20.000.",
-                                                "status": "200",
-                                                "headers": [
-                                                    {
-                                                        "key": "Content-Type",
-                                                        "value": "text/plain; charset=utf-8"
-                                                    }
-                                                ]
+                                                "to": "{{54 + substring(33.telefono; 3; 6) + 15 + substring(33.telefono; 6)}}",
+                                                "text": {
+                                                    "body": "Listo, {{4.data.nombre}}. Ya quedó anotado tu pedido.\r\nEl Dr. te escribe hoy mismo para confirmar el horario. Atiende hasta las 19, así que puede ser al mediodía o a la tarde.\r\nTe recuerdo que la consulta vale $20.000.",
+                                                    "preview_url": false
+                                                },
+                                                "type": "text",
+                                                "fromId": "1265507849982857"
                                             },
                                             "metadata": {
                                                 "designer": {
-                                                    "x": 2412,
-                                                    "y": 609
+                                                    "x": 2645,
+                                                    "y": 890
                                                 },
                                                 "restore": {
                                                     "expect": {
-                                                        "headers": {
+                                                        "text": {
+                                                            "nested": {
+                                                                "preview_url": {
+                                                                    "mode": "chose"
+                                                                }
+                                                            }
+                                                        },
+                                                        "type": {
+                                                            "label": "Text"
+                                                        },
+                                                        "fromId": {
                                                             "mode": "chose",
-                                                            "items": [
-                                                                null
-                                                            ]
+                                                            "label": "Test Number (+1 555-200-6972)"
+                                                        }
+                                                    },
+                                                    "parameters": {
+                                                        "__IMTCONN__": {
+                                                            "data": {
+                                                                "scoped": "true",
+                                                                "connection": "whatsapp-business-cloud2"
+                                                            },
+                                                            "label": "WhatsApp - Consultorio Aveiro (Employee)"
                                                         }
                                                     }
                                                 },
+                                                "parameters": [
+                                                    {
+                                                        "name": "__IMTCONN__",
+                                                        "type": "account:whatsapp-business-cloud,whatsapp-business-cloud2",
+                                                        "label": "Connection",
+                                                        "required": true
+                                                    }
+                                                ],
                                                 "expect": [
                                                     {
-                                                        "name": "status",
-                                                        "type": "uinteger",
-                                                        "label": "Status",
+                                                        "name": "fromId",
+                                                        "type": "select",
+                                                        "label": "Sender ID",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "to",
+                                                        "type": "text",
+                                                        "label": "Receiver",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "type",
+                                                        "type": "select",
+                                                        "label": "Message Type",
                                                         "required": true,
                                                         "validate": {
-                                                            "min": 100
+                                                            "enum": [
+                                                                "text",
+                                                                "image",
+                                                                "audio",
+                                                                "video",
+                                                                "document",
+                                                                "sticker",
+                                                                "location",
+                                                                "contacts",
+                                                                "interactive"
+                                                            ]
                                                         }
                                                     },
                                                     {
-                                                        "name": "body",
-                                                        "type": "any",
-                                                        "label": "Body"
-                                                    },
-                                                    {
-                                                        "name": "headers",
+                                                        "name": "text",
                                                         "spec": [
                                                             {
-                                                                "name": "key",
+                                                                "name": "body",
                                                                 "type": "text",
-                                                                "label": "Key",
-                                                                "required": true,
-                                                                "validate": {
-                                                                    "max": 256
-                                                                }
-                                                            },
-                                                            {
-                                                                "name": "value",
-                                                                "type": "text",
-                                                                "label": "Value",
+                                                                "label": "Body",
                                                                 "required": true,
                                                                 "validate": {
                                                                     "max": 4096
                                                                 }
+                                                            },
+                                                            {
+                                                                "name": "preview_url",
+                                                                "type": "boolean",
+                                                                "label": "Preview URL",
+                                                                "required": true
                                                             }
                                                         ],
-                                                        "type": "array",
-                                                        "label": "Custom headers",
-                                                        "validate": {
-                                                            "maxItems": 16
-                                                        }
+                                                        "type": "collection",
+                                                        "label": "Text"
                                                     }
-                                                ],
-                                                "advanced": true
+                                                ]
                                             }
                                         }
                                     ]
@@ -1266,10 +1632,12 @@
                                 {
                                     "flow": [
                                         {
-                                            "id": 28,
-                                            "module": "gateway:WebhookRespond",
+                                            "id": 40,
+                                            "module": "whatsapp-business-cloud:sendMessage",
                                             "version": 1,
-                                            "parameters": {},
+                                            "parameters": {
+                                                "__IMTCONN__": 10726129
+                                            },
                                             "filter": {
                                                 "name": "consulta",
                                                 "conditions": [
@@ -1280,7 +1648,7 @@
                                                             "o": "text:equal"
                                                         },
                                                         {
-                                                            "a": "{{2.mensaje}}",
+                                                            "a": "{{33.mensaje}}",
                                                             "b": "2",
                                                             "o": "number:equal"
                                                         }
@@ -1288,75 +1656,109 @@
                                                 ]
                                             },
                                             "mapper": {
-                                                "body": "Te cuento lo principal:\r\n- Consulta: $20.000. El presupuesto del tratamiento lo da el Dr.  después de revisarte.\r\n- Obras sociales: trabajamos principalmente con Iasep y Sancor. Si tenés otra, consultale al Dr.\r\n- Trabajo particular.\r\n- Horarios: lunes a viernes de 7:30 a 11:30 y de 16 a 19.\r\n- Formas de pago: efectivo, débito, crédito y transferencia.\r\n¿Querés sacar un turno? Escribí 1.\r\nSi preferís hablar directamente con el Dr., escribí 3.",
-                                                "status": "200",
-                                                "headers": [
-                                                    {
-                                                        "key": "Content-Type: text/plain",
-                                                        "value": "charset=utf-8"
-                                                    }
-                                                ]
+                                                "to": "{{54 + substring(33.telefono; 3; 6) + 15 + substring(33.telefono; 6)}}",
+                                                "text": {
+                                                    "body": "Te cuento lo principal:\r\n- Consulta: $20.000. El presupuesto del tratamiento lo da el Dr.  después de revisarte.\r\n- Obras sociales: trabajamos principalmente con IASEP y Sancor. Si tenés otra, consultale al Dr. Tambien trabajo particular, es decir sin obra social.\r\n- Horarios: lunes a viernes de 7:30 a 11:30 y de 16 a 19.\r\n- Formas de pago: efectivo, débito, crédito y transferencia.\r\n¿Querés sacar un turno? Escribí 1.\r\nSi preferís hablar directamente con el Dr., escribí 3.",
+                                                    "preview_url": false
+                                                },
+                                                "type": "text",
+                                                "fromId": "1265507849982857"
                                             },
                                             "metadata": {
                                                 "designer": {
-                                                    "x": 1200,
-                                                    "y": 450
+                                                    "x": 1901,
+                                                    "y": 1240
                                                 },
                                                 "restore": {
                                                     "expect": {
-                                                        "headers": {
+                                                        "text": {
+                                                            "nested": {
+                                                                "preview_url": {
+                                                                    "mode": "chose"
+                                                                }
+                                                            }
+                                                        },
+                                                        "type": {
+                                                            "label": "Text"
+                                                        },
+                                                        "fromId": {
                                                             "mode": "chose",
-                                                            "items": [
-                                                                null
-                                                            ]
+                                                            "label": "Test Number (+1 555-200-6972)"
+                                                        }
+                                                    },
+                                                    "parameters": {
+                                                        "__IMTCONN__": {
+                                                            "data": {
+                                                                "scoped": "true",
+                                                                "connection": "whatsapp-business-cloud2"
+                                                            },
+                                                            "label": "WhatsApp - Consultorio Aveiro (Employee)"
                                                         }
                                                     }
                                                 },
+                                                "parameters": [
+                                                    {
+                                                        "name": "__IMTCONN__",
+                                                        "type": "account:whatsapp-business-cloud,whatsapp-business-cloud2",
+                                                        "label": "Connection",
+                                                        "required": true
+                                                    }
+                                                ],
                                                 "expect": [
                                                     {
-                                                        "name": "status",
-                                                        "type": "uinteger",
-                                                        "label": "Status",
+                                                        "name": "fromId",
+                                                        "type": "select",
+                                                        "label": "Sender ID",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "to",
+                                                        "type": "text",
+                                                        "label": "Receiver",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "type",
+                                                        "type": "select",
+                                                        "label": "Message Type",
                                                         "required": true,
                                                         "validate": {
-                                                            "min": 100
+                                                            "enum": [
+                                                                "text",
+                                                                "image",
+                                                                "audio",
+                                                                "video",
+                                                                "document",
+                                                                "sticker",
+                                                                "location",
+                                                                "contacts",
+                                                                "interactive"
+                                                            ]
                                                         }
                                                     },
                                                     {
-                                                        "name": "body",
-                                                        "type": "any",
-                                                        "label": "Body"
-                                                    },
-                                                    {
-                                                        "name": "headers",
+                                                        "name": "text",
                                                         "spec": [
                                                             {
-                                                                "name": "key",
+                                                                "name": "body",
                                                                 "type": "text",
-                                                                "label": "Key",
-                                                                "required": true,
-                                                                "validate": {
-                                                                    "max": 256
-                                                                }
-                                                            },
-                                                            {
-                                                                "name": "value",
-                                                                "type": "text",
-                                                                "label": "Value",
+                                                                "label": "Body",
                                                                 "required": true,
                                                                 "validate": {
                                                                     "max": 4096
                                                                 }
+                                                            },
+                                                            {
+                                                                "name": "preview_url",
+                                                                "type": "boolean",
+                                                                "label": "Preview URL",
+                                                                "required": true
                                                             }
                                                         ],
-                                                        "type": "array",
-                                                        "label": "Custom headers",
-                                                        "validate": {
-                                                            "maxItems": 16
-                                                        }
+                                                        "type": "collection",
+                                                        "label": "Text"
                                                     }
-                                                ],
-                                                "advanced": true
+                                                ]
                                             }
                                         }
                                     ]
@@ -1380,7 +1782,7 @@
                                                             "o": "text:equal"
                                                         },
                                                         {
-                                                            "a": "{{2.mensaje}}",
+                                                            "a": "{{33.mensaje}}",
                                                             "b": "3",
                                                             "o": "text:equal"
                                                         }
@@ -1388,33 +1790,34 @@
                                                 ]
                                             },
                                             "mapper": {
-                                                "key": "{{2.telefono}}",
-                                                "upsert": true,
-                                                "overwriteArrays": false,
+                                                "key": "{{33.telefono}}",
                                                 "data": {
                                                     "estado": "derivado",
                                                     "nombre": "",
                                                     "preferencia": "",
-                                                    "ultima_actividad": "{{formatDate(now; \"DD/MM/YYYY - HH:mm\"; \"America/Argentina/Buenos_Aires\")}}"
-                                                }
+                                                    "primer_mensaje": "",
+                                                    "ultima_actividad": "{{now}}"
+                                                },
+                                                "upsert": true,
+                                                "overwriteArrays": false
                                             },
                                             "metadata": {
                                                 "designer": {
-                                                    "x": 1224,
-                                                    "y": 1231
+                                                    "x": 1800,
+                                                    "y": 1500
                                                 },
                                                 "restore": {
-                                                    "parameters": {
-                                                        "datastore": {
-                                                            "label": "conversaciones"
-                                                        }
-                                                    },
                                                     "expect": {
                                                         "upsert": {
                                                             "mode": "chose"
                                                         },
                                                         "overwriteArrays": {
                                                             "mode": "chose"
+                                                        }
+                                                    },
+                                                    "parameters": {
+                                                        "datastore": {
+                                                            "label": "conversaciones"
                                                         }
                                                     }
                                                 },
@@ -1447,8 +1850,6 @@
                                                     },
                                                     {
                                                         "name": "data",
-                                                        "type": "collection",
-                                                        "label": "Record",
                                                         "spec": [
                                                             {
                                                                 "name": "estado",
@@ -1467,78 +1868,130 @@
                                                             },
                                                             {
                                                                 "name": "ultima_actividad",
+                                                                "type": "date",
+                                                                "label": null
+                                                            },
+                                                            {
+                                                                "name": "primer_mensaje",
                                                                 "type": "text",
                                                                 "label": null
                                                             }
-                                                        ]
+                                                        ],
+                                                        "type": "collection",
+                                                        "label": "Record"
                                                     }
                                                 ]
                                             }
                                         },
                                         {
-                                            "id": 31,
-                                            "module": "gateway:WebhookRespond",
+                                            "id": 42,
+                                            "module": "whatsapp-business-cloud:sendMessage",
                                             "version": 1,
-                                            "parameters": {},
+                                            "parameters": {
+                                                "__IMTCONN__": 10726129
+                                            },
                                             "mapper": {
-                                                "body": "Listo, ya le aviso al Dr. para que te escriba.\r\nSi es algo urgente o tenés dolor, avisame y le doy prioridad.",
-                                                "status": "200",
-                                                "headers": []
+                                                "to": "{{54 + substring(33.telefono; 3; 6) + 15 + substring(33.telefono; 6)}}",
+                                                "text": {
+                                                    "body": "Listo, ya le aviso al Dr. para que te escriba.\r\nSi es algo urgente o tenés dolor, avisame y le doy prioridad.",
+                                                    "preview_url": false
+                                                },
+                                                "type": "text",
+                                                "fromId": "1265507849982857"
                                             },
                                             "metadata": {
                                                 "designer": {
-                                                    "x": 2402,
-                                                    "y": 1215
+                                                    "x": 2436,
+                                                    "y": 1507
                                                 },
                                                 "restore": {
                                                     "expect": {
-                                                        "headers": {
-                                                            "mode": "chose"
+                                                        "text": {
+                                                            "nested": {
+                                                                "preview_url": {
+                                                                    "mode": "chose"
+                                                                }
+                                                            }
+                                                        },
+                                                        "type": {
+                                                            "label": "Text"
+                                                        },
+                                                        "fromId": {
+                                                            "mode": "chose",
+                                                            "label": "Test Number (+1 555-200-6972)"
+                                                        }
+                                                    },
+                                                    "parameters": {
+                                                        "__IMTCONN__": {
+                                                            "data": {
+                                                                "scoped": "true",
+                                                                "connection": "whatsapp-business-cloud2"
+                                                            },
+                                                            "label": "WhatsApp - Consultorio Aveiro (Employee)"
                                                         }
                                                     }
                                                 },
+                                                "parameters": [
+                                                    {
+                                                        "name": "__IMTCONN__",
+                                                        "type": "account:whatsapp-business-cloud,whatsapp-business-cloud2",
+                                                        "label": "Connection",
+                                                        "required": true
+                                                    }
+                                                ],
                                                 "expect": [
                                                     {
-                                                        "name": "status",
-                                                        "type": "uinteger",
-                                                        "label": "Status",
+                                                        "name": "fromId",
+                                                        "type": "select",
+                                                        "label": "Sender ID",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "to",
+                                                        "type": "text",
+                                                        "label": "Receiver",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "type",
+                                                        "type": "select",
+                                                        "label": "Message Type",
                                                         "required": true,
                                                         "validate": {
-                                                            "min": 100
+                                                            "enum": [
+                                                                "text",
+                                                                "image",
+                                                                "audio",
+                                                                "video",
+                                                                "document",
+                                                                "sticker",
+                                                                "location",
+                                                                "contacts",
+                                                                "interactive"
+                                                            ]
                                                         }
                                                     },
                                                     {
-                                                        "name": "body",
-                                                        "type": "any",
-                                                        "label": "Body"
-                                                    },
-                                                    {
-                                                        "name": "headers",
+                                                        "name": "text",
                                                         "spec": [
                                                             {
-                                                                "name": "key",
+                                                                "name": "body",
                                                                 "type": "text",
-                                                                "label": "Key",
-                                                                "required": true,
-                                                                "validate": {
-                                                                    "max": 256
-                                                                }
-                                                            },
-                                                            {
-                                                                "name": "value",
-                                                                "type": "text",
-                                                                "label": "Value",
+                                                                "label": "Body",
                                                                 "required": true,
                                                                 "validate": {
                                                                     "max": 4096
                                                                 }
+                                                            },
+                                                            {
+                                                                "name": "preview_url",
+                                                                "type": "boolean",
+                                                                "label": "Preview URL",
+                                                                "required": true
                                                             }
                                                         ],
-                                                        "type": "array",
-                                                        "label": "Custom headers",
-                                                        "validate": {
-                                                            "maxItems": 16
-                                                        }
+                                                        "type": "collection",
+                                                        "label": "Text"
                                                     }
                                                 ]
                                             }
@@ -1552,44 +2005,46 @@
                 {
                     "flow": [
                         {
-                            "id": 27,
-                            "module": "gateway:WebhookRespond",
+                            "id": 45,
+                            "module": "whatsapp-business-cloud:sendMessage",
                             "version": 1,
-                            "parameters": {},
+                            "parameters": {
+                                "__IMTCONN__": 10726129
+                            },
                             "filter": {
                                 "name": "Urgencia",
                                 "conditions": [
                                     [
                                         {
-                                            "a": "{{2.mensaje}}",
+                                            "a": "{{33.mensaje}}",
                                             "b": "duele",
                                             "o": "text:contain"
                                         }
                                     ],
                                     [
                                         {
-                                            "a": "{{2.mensaje}}",
+                                            "a": "{{33.mensaje}}",
                                             "b": "hincha",
                                             "o": "text:contain"
                                         }
                                     ],
                                     [
                                         {
-                                            "a": "{{2.mensaje}}",
+                                            "a": "{{33.mensaje}}",
                                             "b": "molest",
                                             "o": "text:contain"
                                         }
                                     ],
                                     [
                                         {
-                                            "a": "{{2.mensaje}}",
+                                            "a": "{{33.mensaje}}",
                                             "b": "dolor",
                                             "o": "text:contain"
                                         }
                                     ],
                                     [
                                         {
-                                            "a": "{{2.mensaje}}",
+                                            "a": "{{33.mensaje}}",
                                             "b": "sens",
                                             "o": "text:contain"
                                         }
@@ -1597,19 +2052,145 @@
                                 ]
                             },
                             "mapper": {
-                                "body": "Si tenés dolor o alguna molestia, esto lo ve el Dr. directamente.\r\nYa le aviso para que te responda lo antes posible.",
+                                "to": "{{54 + substring(33.telefono; 3; 6) + 15 + substring(33.telefono; 6)}}",
+                                "text": {
+                                    "body": "Si tenés dolor o alguna molestia, esto lo ve el Dr. directamente.\r\nYa le aviso para que te responda lo antes posible.",
+                                    "preview_url": false
+                                },
+                                "type": "text",
+                                "fromId": "1265507849982857"
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 1200,
+                                    "y": 900
+                                },
+                                "restore": {
+                                    "expect": {
+                                        "text": {
+                                            "nested": {
+                                                "preview_url": {
+                                                    "mode": "chose"
+                                                }
+                                            }
+                                        },
+                                        "type": {
+                                            "label": "Text"
+                                        },
+                                        "fromId": {
+                                            "mode": "chose",
+                                            "label": "Test Number (+1 555-200-6972)"
+                                        }
+                                    },
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "whatsapp-business-cloud2"
+                                            },
+                                            "label": "WhatsApp - Consultorio Aveiro (Employee)"
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "__IMTCONN__",
+                                        "type": "account:whatsapp-business-cloud,whatsapp-business-cloud2",
+                                        "label": "Connection",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "fromId",
+                                        "type": "select",
+                                        "label": "Sender ID",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "to",
+                                        "type": "text",
+                                        "label": "Receiver",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "type",
+                                        "type": "select",
+                                        "label": "Message Type",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "text",
+                                                "image",
+                                                "audio",
+                                                "video",
+                                                "document",
+                                                "sticker",
+                                                "location",
+                                                "contacts",
+                                                "interactive"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "text",
+                                        "spec": [
+                                            {
+                                                "name": "body",
+                                                "type": "text",
+                                                "label": "Body",
+                                                "required": true,
+                                                "validate": {
+                                                    "max": 4096
+                                                }
+                                            },
+                                            {
+                                                "name": "preview_url",
+                                                "type": "boolean",
+                                                "label": "Preview URL",
+                                                "required": true
+                                            }
+                                        ],
+                                        "type": "collection",
+                                        "label": "Text"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "flow": [
+                        {
+                            "id": 32,
+                            "module": "gateway:WebhookRespond",
+                            "version": 1,
+                            "parameters": {},
+                            "filter": {
+                                "name": "Verificacion Meta",
+                                "conditions": [
+                                    [
+                                        {
+                                            "a": "{{2.`hub.challenge`}}",
+                                            "o": "exist"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "mapper": {
+                                "body": "{{2.`hub.challenge`}}",
                                 "status": "200",
                                 "headers": [
                                     {
-                                        "key": "Content-Type:",
-                                        "value": "text/plain; charset=utf-8"
+                                        "key": "Content-Type",
+                                        "value": "text/plain"
                                     }
                                 ]
                             },
                             "metadata": {
                                 "designer": {
-                                    "x": 545,
-                                    "y": 331
+                                    "x": 1200,
+                                    "y": 1200
                                 },
                                 "restore": {
                                     "expect": {
@@ -1666,6 +2247,140 @@
                                     }
                                 ],
                                 "advanced": true
+                            }
+                        }
+                    ]
+                },
+                {
+                    "flow": [
+                        {
+                            "id": 48,
+                            "module": "whatsapp-business-cloud:sendMessage",
+                            "version": 1,
+                            "parameters": {
+                                "__IMTCONN__": 10726129
+                            },
+                            "filter": {
+                                "name": "no es texto ",
+                                "conditions": [
+                                    [
+                                        {
+                                            "a": "{{33.tipo}}",
+                                            "b": "^(audio|image|video|sticker|document|location|contacts)$",
+                                            "o": "text:pattern"
+                                        },
+                                        {
+                                            "a": "{{length(33.telefono)}}",
+                                            "b": "10\n",
+                                            "o": "number:greater"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "mapper": {
+                                "to": "{{54 + substring(33.telefono; 3; 6) + 15 + substring(33.telefono; 6)}}",
+                                "text": {
+                                    "body": "¡Hola! Soy el asistente del consultorio del Dr. Aveiro.🦷\r\n\r\nTodavía no puedo escuchar audios ni ver fotos, mil disculpas. ¿Me lo escribís en un mensajito?\r\n\r\nY si es algo que te está molestando, escribime \"me duele\", y le aviso al Dr. al momento.",
+                                    "preview_url": false
+                                },
+                                "type": "text",
+                                "fromId": "1265507849982857"
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 1025,
+                                    "y": 1802
+                                },
+                                "restore": {
+                                    "expect": {
+                                        "text": {
+                                            "nested": {
+                                                "preview_url": {
+                                                    "mode": "chose"
+                                                }
+                                            }
+                                        },
+                                        "type": {
+                                            "label": "Text"
+                                        },
+                                        "fromId": {
+                                            "mode": "chose",
+                                            "label": "Test Number (+1 555-200-6972)"
+                                        }
+                                    },
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "whatsapp-business-cloud2"
+                                            },
+                                            "label": "WhatsApp - Consultorio Aveiro (Employee)"
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "__IMTCONN__",
+                                        "type": "account:whatsapp-business-cloud,whatsapp-business-cloud2",
+                                        "label": "Connection",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "fromId",
+                                        "type": "select",
+                                        "label": "Sender ID",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "to",
+                                        "type": "text",
+                                        "label": "Receiver",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "type",
+                                        "type": "select",
+                                        "label": "Message Type",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "text",
+                                                "image",
+                                                "audio",
+                                                "video",
+                                                "document",
+                                                "sticker",
+                                                "location",
+                                                "contacts",
+                                                "interactive"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "text",
+                                        "spec": [
+                                            {
+                                                "name": "body",
+                                                "type": "text",
+                                                "label": "Body",
+                                                "required": true,
+                                                "validate": {
+                                                    "max": 4096
+                                                }
+                                            },
+                                            {
+                                                "name": "preview_url",
+                                                "type": "boolean",
+                                                "label": "Preview URL",
+                                                "required": true
+                                            }
+                                        ],
+                                        "type": "collection",
+                                        "label": "Text"
+                                    }
+                                ]
                             }
                         }
                     ]

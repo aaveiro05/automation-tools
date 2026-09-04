@@ -189,6 +189,92 @@ el valor crudo: una para el humano, otra para la máquina.
 
 ---
 
+### Una ruta de router sin filtro acepta todo
+
+**Síntoma:** se le pone un filtro a una rama, el filtro está perfecto, y no
+tiene ningún efecto: entra cualquier cosa.
+
+**Causa:** el filtro quedó en una ruta y el módulo en otra. Al arrastrar un
+módulo clonado sobre el círculo vacío de una ruta, si no cae justo encima,
+Make crea una **ruta nueva** para el módulo y deja la anterior vacía. El
+filtro protege una rama que no tiene nada adentro.
+
+**Cómo se ve:** en el canvas queda un círculo con `+` colgando del router.
+Si el módulo estuviera enganchado ahí, ese `+` no existiría.
+
+**Solución:** poner el filtro en la línea que entra al módulo y borrar la
+ruta huérfana.
+
+**Regla:** una ruta sin filtro no está "sin configurar" — dice **"aceptá
+todo"**. El filtro va primero, el módulo después.
+
+**Cómo no perder una hora:** antes de dudar del operador o de las comillas,
+verificar que el filtro esté en el link que uno cree.
+
+---
+
+### `+` suma en vez de concatenar
+
+**Síntoma:** una fórmula que arma un número de teléfono devuelve `69`.
+
+**Causa:** `"54" + substring(telefono; 3; 6) + "15" + substring(telefono; 6)`
+con el teléfono vacío queda `"54" + "15"`. Make interpreta los dos como
+números y los **suma**. Con el teléfono cargado había suficiente texto como
+para que concatenara, así que el error solo aparece con datos vacíos.
+
+**Solución:** sacar el texto fijo afuera de las llaves —
+`54{{substring(...)}}15{{substring(...)}}`— para que no haya ninguna
+operación que interpretar.
+
+**Regla:** una fórmula sin guardas no falla, **inventa**. No avisó que le
+faltaba el teléfono: devolvió un número perfectamente formado que no
+significaba nada. Eso es peor que un error.
+
+---
+
+### Tormenta de reintentos
+
+**Síntoma:** decenas de ejecuciones idénticas en Error, con segundos de
+diferencia, y el usuario recibe el mismo mensaje muchas veces.
+
+**Causa:** el escenario le responde al webhook recién **al final**. Si algo
+falla en el medio, Make devuelve error y el proveedor reenvía el mismo
+evento. Vuelve a fallar → vuelve a reintentar. En el log aparece como
+*"Automatic failure response was sent to the webhook"*.
+
+**Solución:** un módulo **Webhook response** con status `200` puesto
+**inmediatamente después del webhook**, antes que ningún otro. La respuesta
+sale antes de que nada pueda fallar.
+
+Si el mismo webhook atiende la verificación del proveedor, el body puede ser
+`{{hub.challenge}}`: vacío en los mensajes normales, el código en la
+verificación. Un módulo cubre los dos casos.
+
+**Por qué no un error handler en "Ignore":** también corta el bucle, pero
+deja la ejecución en verde y **apaga la alarma**. Con el 200 temprano el
+error sigue apareciendo en rojo y uno se entera.
+
+---
+
+### Los avisos de entrega también gastan operaciones
+
+**Síntoma:** el escenario corre muchas más veces de las que hay mensajes.
+
+**Causa:** WhatsApp manda un webhook por cada cambio de estado de los
+mensajes que salen (`sent`, `delivered`, `read`). No traen `messages`,
+traen `statuses`, así que todos los campos que se extraen del mensaje
+quedan vacíos.
+
+**Cómo distinguirlos sin abrirlos:** por el `Data size` de la ejecución. En
+este escenario los callbacks pesan ~642 B y los mensajes reales ~850 B.
+
+**Solución:** filtrarlos lo más cerca posible del webhook, para que mueran
+gastando el mínimo de operaciones. Una conversación de cinco respuestas
+genera del orden de diez callbacks; si cada uno cuesta dos operaciones, el
+ruido pesa tanto como la conversación.
+
+---
+
 # JavaScript
 
 ### Una cuenta devuelve `NaN`
@@ -319,3 +405,33 @@ está ingresando. Pedir otro mata el que se acaba de copiar.
 Son plataformas distintas. La primera es la API de modelos de IA de Meta
 y pide método de pago; la segunda es donde se crean las apps de WhatsApp
 Business. La cuenta de desarrollador usa una cuenta de **Facebook**.
+
+---
+
+### Un audio o una foto llegan sin texto
+
+**Síntoma:** alguien manda un audio y el bot no contesta absolutamente nada.
+
+**Causa:** el payload solo trae `text.body` cuando `type` es `text`. Con un
+audio, `messages[1].text.body` no existe, la variable queda vacía, y ninguna
+condición del menú coincide. La conversación muere en silencio.
+
+**Solución:** extraer también `messages[1].type` y armar una rama para lo
+que no es texto, con **lista blanca**:
+
+```
+^(audio|image|video|sticker|document|location|contacts)$
+```
+
+**Por qué lista blanca y no `distinto de text`:** un campo vacío también es
+distinto de `text`. Con lista negra entra todo el ruido; con lista blanca
+solo entra lo que se nombró.
+
+---
+
+### El nombre del perfil llega gratis
+
+`value.contacts[1].profile.name` viene en **cada** mensaje entrante, sin
+pedirlo. No sirve como nombre formal —la gente pone apodos, emojis o el
+nombre de su negocio— pero es información gratis que ayuda a identificar a
+quien escribe.
