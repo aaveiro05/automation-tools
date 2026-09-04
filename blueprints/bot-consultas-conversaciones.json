@@ -55,7 +55,23 @@
             "module": "gateway:WebhookRespond",
             "version": 1,
             "parameters": {},
-            "filter": null,
+            "filter": {
+                "name": "Es para nosotros",
+                "conditions": [
+                    [
+                        {
+                            "a": "{{2.entry[1].changes[1].value.messages[1].from}}",
+                            "o": "exist"
+                        }
+                    ],
+                    [
+                        {
+                            "a": "{{2.hub.challenge}}",
+                            "o": "exist"
+                        }
+                    ]
+                ]
+            },
             "mapper": {
                 "body": "{{2.hub.challenge}}",
                 "status": "200",
@@ -125,6 +141,7 @@
             "version": 1,
             "parameters": {},
             "mapper": {
+                "scope": "roundtrip",
                 "variables": [
                     {
                         "name": "telefono",
@@ -142,8 +159,7 @@
                         "name": "nombre_wa",
                         "value": "{{2.entry[1].changes[1].value.contacts[1].profile.name}}"
                     }
-                ],
-                "scope": "roundtrip"
+                ]
             },
             "metadata": {
                 "designer": {
@@ -152,6 +168,9 @@
                 },
                 "restore": {
                     "expect": {
+                        "scope": {
+                            "label": "One cycle"
+                        },
                         "variables": {
                             "items": [
                                 null,
@@ -159,39 +178,36 @@
                                 null,
                                 null
                             ]
-                        },
-                        "scope": {
-                            "label": "One cycle"
                         }
                     }
                 },
                 "expect": [
                     {
                         "name": "variables",
+                        "spec": {
+                            "name": "value",
+                            "spec": [
+                                {
+                                    "name": "name",
+                                    "type": "text",
+                                    "label": "Variable name",
+                                    "required": true
+                                },
+                                {
+                                    "name": "value",
+                                    "type": "any",
+                                    "label": "Variable value"
+                                }
+                            ],
+                            "type": "collection",
+                            "label": "Variable"
+                        },
                         "type": "array",
                         "label": "Variables",
                         "validate": {
                             "unique": {
                                 "by": "name"
                             }
-                        },
-                        "spec": {
-                            "type": "collection",
-                            "label": "Variable",
-                            "spec": [
-                                {
-                                    "name": "name",
-                                    "label": "Variable name",
-                                    "type": "text",
-                                    "required": true
-                                },
-                                {
-                                    "name": "value",
-                                    "label": "Variable value",
-                                    "type": "any"
-                                }
-                            ],
-                            "name": "value"
                         }
                     },
                     {
@@ -210,23 +226,23 @@
                 "interface": [
                     {
                         "name": "telefono",
-                        "label": "telefono",
-                        "type": "any"
+                        "type": "any",
+                        "label": "telefono"
                     },
                     {
                         "name": "mensaje",
-                        "label": "mensaje",
-                        "type": "any"
+                        "type": "any",
+                        "label": "mensaje"
                     },
                     {
                         "name": "tipo",
-                        "label": "tipo",
-                        "type": "any"
+                        "type": "any",
+                        "label": "tipo"
                     },
                     {
                         "name": "nombre_wa",
-                        "label": "nombre_wa",
-                        "type": "any"
+                        "type": "any",
+                        "label": "nombre_wa"
                     }
                 ]
             }
@@ -258,8 +274,8 @@
                                     [
                                         {
                                             "a": "{{lower(33.mensaje)}}",
-                                            "o": "text:notpattern",
-                                            "b": "\\b(dolor\\b|dolores de|duele|duelen|molest|hinch|urgen|emergenc|sangr|flem|absces|infectad|sensib|no aguanto|matando)"
+                                            "b": "\\b(dolor\\b|dolores de|duele|duelen|molest|hinch|urgen|emergenc|sangr|flem|absces|infectad|sensib|no aguanto|matando)",
+                                            "o": "text:notpattern"
                                         },
                                         {
                                             "a": "{{33.mensaje}}",
@@ -471,18 +487,14 @@
                                                 "__IMTCONN__": 10726129
                                             },
                                             "mapper": {
-                                                "fromId": "1265507849982857",
                                                 "to": "{{54 + substring(33.telefono; 3; 6) + 15 + substring(33.telefono; 6)}}",
                                                 "type": "interactive",
+                                                "fromId": "1265507849982857",
                                                 "interactive": {
-                                                    "type": "button",
                                                     "body": {
                                                         "text": "¡Hola! 👋 Soy el asistente del consultorio del *Dr. Aveiro*.\r\n\r\nContesto en seguida, a cualquier hora. Contame qué necesitás:"
                                                     },
-                                                    "header": {},
-                                                    "footer": {
-                                                        "text": "¿Te duele algo? Escribime \"me duele\""
-                                                    },
+                                                    "type": "button",
                                                     "action": {
                                                         "buttons": [
                                                             {
@@ -507,7 +519,11 @@
                                                                 }
                                                             }
                                                         ]
-                                                    }
+                                                    },
+                                                    "footer": {
+                                                        "text": "¿Te duele algo? Escribime \"me duele\""
+                                                    },
+                                                    "header": {}
                                                 }
                                             },
                                             "metadata": {
@@ -516,37 +532,19 @@
                                                     "y": -192
                                                 },
                                                 "restore": {
-                                                    "parameters": {
-                                                        "__IMTCONN__": {
-                                                            "label": "WhatsApp - Consultorio Aveiro (Employee)",
-                                                            "data": {
-                                                                "scoped": "true",
-                                                                "connection": "whatsapp-business-cloud2"
-                                                            }
-                                                        }
-                                                    },
                                                     "expect": {
+                                                        "type": {
+                                                            "label": "Interactive"
+                                                        },
                                                         "fromId": {
                                                             "mode": "chose",
                                                             "label": "Test Number (+1 555-200-6972)"
-                                                        },
-                                                        "type": {
-                                                            "label": "Interactive"
                                                         },
                                                         "interactive": {
                                                             "nested": {
                                                                 "type": {
                                                                     "mode": "chose",
                                                                     "label": "Reply Buttons"
-                                                                },
-                                                                "header": {
-                                                                    "collapsed": true,
-                                                                    "nested": {
-                                                                        "type": {
-                                                                            "mode": "chose",
-                                                                            "label": "Empty"
-                                                                        }
-                                                                    }
                                                                 },
                                                                 "action": {
                                                                     "nested": {
@@ -559,8 +557,26 @@
                                                                             ]
                                                                         }
                                                                     }
+                                                                },
+                                                                "header": {
+                                                                    "nested": {
+                                                                        "type": {
+                                                                            "mode": "chose",
+                                                                            "label": "Empty"
+                                                                        }
+                                                                    },
+                                                                    "collapsed": true
                                                                 }
                                                             }
+                                                        }
+                                                    },
+                                                    "parameters": {
+                                                        "__IMTCONN__": {
+                                                            "data": {
+                                                                "scoped": "true",
+                                                                "connection": "whatsapp-business-cloud2"
+                                                            },
+                                                            "label": "WhatsApp - Consultorio Aveiro (Employee)"
                                                         }
                                                     }
                                                 },
@@ -606,8 +622,6 @@
                                                     },
                                                     {
                                                         "name": "interactive",
-                                                        "type": "collection",
-                                                        "label": "Interactive",
                                                         "spec": [
                                                             {
                                                                 "name": "type",
@@ -623,17 +637,9 @@
                                                             },
                                                             {
                                                                 "name": "action",
-                                                                "type": "collection",
-                                                                "label": "Action",
                                                                 "spec": [
                                                                     {
                                                                         "name": "buttons",
-                                                                        "type": "array",
-                                                                        "label": "Buttons",
-                                                                        "validate": {
-                                                                            "maxItems": 3
-                                                                        },
-                                                                        "required": true,
                                                                         "spec": [
                                                                             {
                                                                                 "name": "type",
@@ -665,30 +671,36 @@
                                                                                 "type": "collection",
                                                                                 "label": "Reply"
                                                                             }
-                                                                        ]
+                                                                        ],
+                                                                        "type": "array",
+                                                                        "label": "Buttons",
+                                                                        "required": true,
+                                                                        "validate": {
+                                                                            "maxItems": 3
+                                                                        }
                                                                     }
-                                                                ]
+                                                                ],
+                                                                "type": "collection",
+                                                                "label": "Action"
                                                             },
                                                             {
                                                                 "name": "body",
-                                                                "type": "collection",
-                                                                "label": "Body",
                                                                 "spec": [
                                                                     {
                                                                         "name": "text",
                                                                         "type": "text",
                                                                         "label": "Body Text",
+                                                                        "required": true,
                                                                         "validate": {
                                                                             "max": 1024
-                                                                        },
-                                                                        "required": true
+                                                                        }
                                                                     }
-                                                                ]
+                                                                ],
+                                                                "type": "collection",
+                                                                "label": "Body"
                                                             },
                                                             {
                                                                 "name": "header",
-                                                                "type": "collection",
-                                                                "label": "Header",
                                                                 "spec": [
                                                                     {
                                                                         "name": "type",
@@ -703,12 +715,12 @@
                                                                             ]
                                                                         }
                                                                     }
-                                                                ]
+                                                                ],
+                                                                "type": "collection",
+                                                                "label": "Header"
                                                             },
                                                             {
                                                                 "name": "footer",
-                                                                "type": "collection",
-                                                                "label": "Footer",
                                                                 "spec": [
                                                                     {
                                                                         "name": "text",
@@ -718,9 +730,13 @@
                                                                             "max": 60
                                                                         }
                                                                     }
-                                                                ]
+                                                                ],
+                                                                "type": "collection",
+                                                                "label": "Footer"
                                                             }
-                                                        ]
+                                                        ],
+                                                        "type": "collection",
+                                                        "label": "Interactive"
                                                     }
                                                 ]
                                             }
@@ -742,28 +758,28 @@
                                                     [
                                                         {
                                                             "a": "{{lower(33.mensaje)}}",
-                                                            "o": "text:pattern",
-                                                            "b": "^(1|turno)$"
+                                                            "b": "^(1|turno)$",
+                                                            "o": "text:pattern"
                                                         },
                                                         {
                                                             "a": "{{4.data.estado}}",
-                                                            "o": "text:equal",
-                                                            "b": "menu"
+                                                            "b": "menu",
+                                                            "o": "text:equal"
                                                         }
                                                     ]
                                                 ]
                                             },
                                             "mapper": {
                                                 "key": "{{33.telefono}}",
-                                                "upsert": true,
-                                                "overwriteArrays": false,
                                                 "data": {
                                                     "estado": "pidiendo_nombre",
                                                     "nombre": "",
                                                     "preferencia": "",
-                                                    "ultima_actividad": "{{now}}",
-                                                    "primer_mensaje": ""
-                                                }
+                                                    "primer_mensaje": "",
+                                                    "ultima_actividad": "{{now}}"
+                                                },
+                                                "upsert": true,
+                                                "overwriteArrays": false
                                             },
                                             "metadata": {
                                                 "designer": {
@@ -771,17 +787,17 @@
                                                     "y": 109
                                                 },
                                                 "restore": {
-                                                    "parameters": {
-                                                        "datastore": {
-                                                            "label": "conversaciones"
-                                                        }
-                                                    },
                                                     "expect": {
                                                         "upsert": {
                                                             "mode": "chose"
                                                         },
                                                         "overwriteArrays": {
                                                             "mode": "chose"
+                                                        }
+                                                    },
+                                                    "parameters": {
+                                                        "datastore": {
+                                                            "label": "conversaciones"
                                                         }
                                                     }
                                                 },
@@ -814,8 +830,6 @@
                                                     },
                                                     {
                                                         "name": "data",
-                                                        "type": "collection",
-                                                        "label": "Record",
                                                         "spec": [
                                                             {
                                                                 "name": "estado",
@@ -842,7 +856,9 @@
                                                                 "type": "text",
                                                                 "label": null
                                                             }
-                                                        ]
+                                                        ],
+                                                        "type": "collection",
+                                                        "label": "Record"
                                                     }
                                                 ]
                                             }
@@ -1315,15 +1331,8 @@
                                                 "__IMTCONN__": 10428105
                                             },
                                             "mapper": {
-                                                "mode": "select",
-                                                "insertUnformatted": false,
-                                                "valueInputOption": "USER_ENTERED",
-                                                "insertDataOption": "INSERT_ROWS",
                                                 "from": "drive",
-                                                "spreadsheetId": "/1ah4YbV10Gf3NSgBnOh6uno0Kxpb2nxFyAvI4J7gWTGE",
-                                                "sheetId": "Hoja 1",
-                                                "includesHeaders": true,
-                                                "useColumnHeaders": false,
+                                                "mode": "select",
                                                 "values": {
                                                     "0": "{{formatDate(now; \"DD/MM/YYYY - HH:mm \"; \"America/Argentina/Buenos_Aires\")}}",
                                                     "1": "{{4.data.nombre}}",
@@ -1333,7 +1342,14 @@
                                                     "5": "https://wa.me/{{33.telefono}}",
                                                     "6": "{{4.data.primer_mensaje}}",
                                                     "7": "{{33.nombre_wa}}"
-                                                }
+                                                },
+                                                "sheetId": "Hoja 1",
+                                                "spreadsheetId": "/1ah4YbV10Gf3NSgBnOh6uno0Kxpb2nxFyAvI4J7gWTGE",
+                                                "includesHeaders": true,
+                                                "insertDataOption": "INSERT_ROWS",
+                                                "useColumnHeaders": false,
+                                                "valueInputOption": "USER_ENTERED",
+                                                "insertUnformatted": false
                                             },
                                             "metadata": {
                                                 "designer": {
@@ -1341,46 +1357,46 @@
                                                     "y": 704
                                                 },
                                                 "restore": {
-                                                    "parameters": {
-                                                        "__IMTCONN__": {
-                                                            "label": "alej0's Google connection (alejoaveiro05@gmail.com)",
-                                                            "data": {
-                                                                "scoped": "true",
-                                                                "connection": "google"
-                                                            }
-                                                        }
-                                                    },
                                                     "expect": {
+                                                        "from": {
+                                                            "label": "My Drive"
+                                                        },
                                                         "mode": {
                                                             "label": "Search by path"
                                                         },
-                                                        "insertUnformatted": {
-                                                            "mode": "chose"
-                                                        },
-                                                        "valueInputOption": {
-                                                            "mode": "chose",
-                                                            "label": "User entered"
-                                                        },
-                                                        "insertDataOption": {
-                                                            "mode": "chose",
-                                                            "label": "Insert rows"
-                                                        },
-                                                        "from": {
-                                                            "label": "My Drive"
+                                                        "sheetId": {
+                                                            "label": "Hoja 1"
                                                         },
                                                         "spreadsheetId": {
                                                             "path": [
                                                                 "pedidos"
                                                             ]
                                                         },
-                                                        "sheetId": {
-                                                            "label": "Hoja 1"
-                                                        },
                                                         "includesHeaders": {
                                                             "label": "Yes"
                                                         },
+                                                        "insertDataOption": {
+                                                            "mode": "chose",
+                                                            "label": "Insert rows"
+                                                        },
                                                         "useColumnHeaders": {
                                                             "label": "No"
+                                                        },
+                                                        "valueInputOption": {
+                                                            "mode": "chose",
+                                                            "label": "User entered"
+                                                        },
+                                                        "insertUnformatted": {
+                                                            "mode": "chose"
+                                                        }
+                                                    },
+                                                    "parameters": {
+                                                        "__IMTCONN__": {
+                                                            "data": {
+                                                                "scoped": "true",
+                                                                "connection": "google"
+                                                            },
+                                                            "label": "alej0's Google connection (alejoaveiro05@gmail.com)"
                                                         }
                                                     }
                                                 },
@@ -1486,22 +1502,6 @@
                                                     },
                                                     {
                                                         "name": "values",
-                                                        "type": "collection",
-                                                        "label": "Values in columns",
-                                                        "metadata": [
-                                                            [
-                                                                [
-                                                                    "fecha",
-                                                                    "nombre",
-                                                                    "teléfono",
-                                                                    "preferencias",
-                                                                    "gestión",
-                                                                    "escribir",
-                                                                    "primer_mensaje",
-                                                                    "nombre_wa"
-                                                                ]
-                                                            ]
-                                                        ],
                                                         "spec": [
                                                             {
                                                                 "name": "0",
@@ -1633,6 +1633,22 @@
                                                                 "type": "text",
                                                                 "label": "(Z)"
                                                             }
+                                                        ],
+                                                        "type": "collection",
+                                                        "label": "Values in columns",
+                                                        "metadata": [
+                                                            [
+                                                                [
+                                                                    "fecha",
+                                                                    "nombre",
+                                                                    "teléfono",
+                                                                    "preferencias",
+                                                                    "gestión",
+                                                                    "escribir",
+                                                                    "primer_mensaje",
+                                                                    "nombre_wa"
+                                                                ]
+                                                            ]
                                                         ]
                                                     }
                                                 ]
@@ -1768,30 +1784,26 @@
                                                     [
                                                         {
                                                             "a": "{{4.data.estado}}",
-                                                            "o": "text:equal",
-                                                            "b": "menu"
+                                                            "b": "menu",
+                                                            "o": "text:equal"
                                                         },
                                                         {
                                                             "a": "{{lower(33.mensaje)}}",
-                                                            "o": "text:pattern",
-                                                            "b": "^(2|info)$"
+                                                            "b": "^(2|info)$",
+                                                            "o": "text:pattern"
                                                         }
                                                     ]
                                                 ]
                                             },
                                             "mapper": {
-                                                "fromId": "1265507849982857",
                                                 "to": "{{54 + substring(33.telefono; 3; 6) + 15 + substring(33.telefono; 6)}}",
                                                 "type": "interactive",
+                                                "fromId": "1265507849982857",
                                                 "interactive": {
-                                                    "type": "button",
                                                     "body": {
                                                         "text": "💰 *La consulta*\r\n$20.000 — incluye revisión y diagnóstico.\r\nEl presupuesto del tratamiento lo da el Dr. después de verte.\r\n\r\n🩺 *Obras sociales*\r\nIASEP y Sancor. También atiende particular.\r\nSi tenés otra, consultale al Dr.\r\n\r\n🕐 *Horarios*\r\nLunes a viernes, de 7:30 a 11:30 y de 16 a 19.\r\n\r\n📍 *Dónde*\r\n[calle y número], Formosa\r\n\r\n💳 *Pagos*\r\nEfectivo, débito, crédito y transferencia."
                                                     },
-                                                    "header": {},
-                                                    "footer": {
-                                                        "text": "¿Te busco un turno?"
-                                                    },
+                                                    "type": "button",
                                                     "action": {
                                                         "buttons": [
                                                             {
@@ -1809,7 +1821,11 @@
                                                                 }
                                                             }
                                                         ]
-                                                    }
+                                                    },
+                                                    "footer": {
+                                                        "text": "¿Te busco un turno?"
+                                                    },
+                                                    "header": {}
                                                 }
                                             },
                                             "metadata": {
@@ -1818,36 +1834,19 @@
                                                     "y": 1009
                                                 },
                                                 "restore": {
-                                                    "parameters": {
-                                                        "__IMTCONN__": {
-                                                            "label": "WhatsApp - Consultorio Aveiro (Employee)",
-                                                            "data": {
-                                                                "scoped": "true",
-                                                                "connection": "whatsapp-business-cloud2"
-                                                            }
-                                                        }
-                                                    },
                                                     "expect": {
+                                                        "type": {
+                                                            "label": "Interactive"
+                                                        },
                                                         "fromId": {
                                                             "mode": "chose",
                                                             "label": "Test Number (+1 555-200-6972)"
-                                                        },
-                                                        "type": {
-                                                            "label": "Interactive"
                                                         },
                                                         "interactive": {
                                                             "nested": {
                                                                 "type": {
                                                                     "mode": "chose",
                                                                     "label": "Reply Buttons"
-                                                                },
-                                                                "header": {
-                                                                    "nested": {
-                                                                        "type": {
-                                                                            "mode": "chose",
-                                                                            "label": "Empty"
-                                                                        }
-                                                                    }
                                                                 },
                                                                 "action": {
                                                                     "nested": {
@@ -1859,8 +1858,25 @@
                                                                             ]
                                                                         }
                                                                     }
+                                                                },
+                                                                "header": {
+                                                                    "nested": {
+                                                                        "type": {
+                                                                            "mode": "chose",
+                                                                            "label": "Empty"
+                                                                        }
+                                                                    }
                                                                 }
                                                             }
+                                                        }
+                                                    },
+                                                    "parameters": {
+                                                        "__IMTCONN__": {
+                                                            "data": {
+                                                                "scoped": "true",
+                                                                "connection": "whatsapp-business-cloud2"
+                                                            },
+                                                            "label": "WhatsApp - Consultorio Aveiro (Employee)"
                                                         }
                                                     }
                                                 },
@@ -1906,8 +1922,6 @@
                                                     },
                                                     {
                                                         "name": "interactive",
-                                                        "type": "collection",
-                                                        "label": "Interactive",
                                                         "spec": [
                                                             {
                                                                 "name": "type",
@@ -1923,17 +1937,9 @@
                                                             },
                                                             {
                                                                 "name": "action",
-                                                                "type": "collection",
-                                                                "label": "Action",
                                                                 "spec": [
                                                                     {
                                                                         "name": "buttons",
-                                                                        "type": "array",
-                                                                        "label": "Buttons",
-                                                                        "validate": {
-                                                                            "maxItems": 3
-                                                                        },
-                                                                        "required": true,
                                                                         "spec": [
                                                                             {
                                                                                 "name": "type",
@@ -1965,30 +1971,36 @@
                                                                                 "type": "collection",
                                                                                 "label": "Reply"
                                                                             }
-                                                                        ]
+                                                                        ],
+                                                                        "type": "array",
+                                                                        "label": "Buttons",
+                                                                        "required": true,
+                                                                        "validate": {
+                                                                            "maxItems": 3
+                                                                        }
                                                                     }
-                                                                ]
+                                                                ],
+                                                                "type": "collection",
+                                                                "label": "Action"
                                                             },
                                                             {
                                                                 "name": "body",
-                                                                "type": "collection",
-                                                                "label": "Body",
                                                                 "spec": [
                                                                     {
                                                                         "name": "text",
                                                                         "type": "text",
                                                                         "label": "Body Text",
+                                                                        "required": true,
                                                                         "validate": {
                                                                             "max": 1024
-                                                                        },
-                                                                        "required": true
+                                                                        }
                                                                     }
-                                                                ]
+                                                                ],
+                                                                "type": "collection",
+                                                                "label": "Body"
                                                             },
                                                             {
                                                                 "name": "header",
-                                                                "type": "collection",
-                                                                "label": "Header",
                                                                 "spec": [
                                                                     {
                                                                         "name": "type",
@@ -2003,12 +2015,12 @@
                                                                             ]
                                                                         }
                                                                     }
-                                                                ]
+                                                                ],
+                                                                "type": "collection",
+                                                                "label": "Header"
                                                             },
                                                             {
                                                                 "name": "footer",
-                                                                "type": "collection",
-                                                                "label": "Footer",
                                                                 "spec": [
                                                                     {
                                                                         "name": "text",
@@ -2018,9 +2030,13 @@
                                                                             "max": 60
                                                                         }
                                                                     }
-                                                                ]
+                                                                ],
+                                                                "type": "collection",
+                                                                "label": "Footer"
                                                             }
-                                                        ]
+                                                        ],
+                                                        "type": "collection",
+                                                        "label": "Interactive"
                                                     }
                                                 ]
                                             }
@@ -2042,13 +2058,13 @@
                                                     [
                                                         {
                                                             "a": "{{4.data.estado}}",
-                                                            "o": "text:equal",
-                                                            "b": "menu"
+                                                            "b": "menu",
+                                                            "o": "text:equal"
                                                         },
                                                         {
                                                             "a": "{{lower(33.mensaje)}}",
-                                                            "o": "text:pattern",
-                                                            "b": "^(3|doctor)$"
+                                                            "b": "^(3|doctor)$",
+                                                            "o": "text:pattern"
                                                         }
                                                     ]
                                                 ]
@@ -2277,30 +2293,26 @@
                                                     [
                                                         {
                                                             "a": "{{4.data.estado}}",
-                                                            "o": "text:equal",
-                                                            "b": "menu"
+                                                            "b": "menu",
+                                                            "o": "text:equal"
                                                         },
                                                         {
                                                             "a": "{{33.mensaje}}",
-                                                            "o": "text:notpattern",
-                                                            "b": "^(1|2|3|turno|info|doctor)$"
+                                                            "b": "^(1|2|3|turno|info|doctor)$",
+                                                            "o": "text:notpattern"
                                                         }
                                                     ]
                                                 ]
                                             },
                                             "mapper": {
-                                                "fromId": "1265507849982857",
                                                 "to": "{{54 + substring(33.telefono; 3; 6) + 15 + substring(33.telefono; 6)}}",
                                                 "type": "interactive",
+                                                "fromId": "1265507849982857",
                                                 "interactive": {
-                                                    "type": "button",
                                                     "body": {
                                                         "text": "Uy, perdoname — eso no lo entendí 🙈\r\nSoy el asistente del consultorio y por ahora manejo solo estas opciones:"
                                                     },
-                                                    "header": {},
-                                                    "footer": {
-                                                        "text": "¿Te duele algo? Escribime \"me duele\""
-                                                    },
+                                                    "type": "button",
                                                     "action": {
                                                         "buttons": [
                                                             {
@@ -2325,7 +2337,11 @@
                                                                 }
                                                             }
                                                         ]
-                                                    }
+                                                    },
+                                                    "footer": {
+                                                        "text": "¿Te duele algo? Escribime \"me duele\""
+                                                    },
+                                                    "header": {}
                                                 }
                                             },
                                             "metadata": {
@@ -2334,36 +2350,19 @@
                                                     "y": 1640
                                                 },
                                                 "restore": {
-                                                    "parameters": {
-                                                        "__IMTCONN__": {
-                                                            "label": "WhatsApp - Consultorio Aveiro (Employee)",
-                                                            "data": {
-                                                                "scoped": "true",
-                                                                "connection": "whatsapp-business-cloud2"
-                                                            }
-                                                        }
-                                                    },
                                                     "expect": {
+                                                        "type": {
+                                                            "label": "Interactive"
+                                                        },
                                                         "fromId": {
                                                             "mode": "chose",
                                                             "label": "Test Number (+1 555-200-6972)"
-                                                        },
-                                                        "type": {
-                                                            "label": "Interactive"
                                                         },
                                                         "interactive": {
                                                             "nested": {
                                                                 "type": {
                                                                     "mode": "chose",
                                                                     "label": "Reply Buttons"
-                                                                },
-                                                                "header": {
-                                                                    "nested": {
-                                                                        "type": {
-                                                                            "mode": "chose",
-                                                                            "label": "Empty"
-                                                                        }
-                                                                    }
                                                                 },
                                                                 "action": {
                                                                     "nested": {
@@ -2376,8 +2375,25 @@
                                                                             ]
                                                                         }
                                                                     }
+                                                                },
+                                                                "header": {
+                                                                    "nested": {
+                                                                        "type": {
+                                                                            "mode": "chose",
+                                                                            "label": "Empty"
+                                                                        }
+                                                                    }
                                                                 }
                                                             }
+                                                        }
+                                                    },
+                                                    "parameters": {
+                                                        "__IMTCONN__": {
+                                                            "data": {
+                                                                "scoped": "true",
+                                                                "connection": "whatsapp-business-cloud2"
+                                                            },
+                                                            "label": "WhatsApp - Consultorio Aveiro (Employee)"
                                                         }
                                                     }
                                                 },
@@ -2423,8 +2439,6 @@
                                                     },
                                                     {
                                                         "name": "interactive",
-                                                        "type": "collection",
-                                                        "label": "Interactive",
                                                         "spec": [
                                                             {
                                                                 "name": "type",
@@ -2440,17 +2454,9 @@
                                                             },
                                                             {
                                                                 "name": "action",
-                                                                "type": "collection",
-                                                                "label": "Action",
                                                                 "spec": [
                                                                     {
                                                                         "name": "buttons",
-                                                                        "type": "array",
-                                                                        "label": "Buttons",
-                                                                        "validate": {
-                                                                            "maxItems": 3
-                                                                        },
-                                                                        "required": true,
                                                                         "spec": [
                                                                             {
                                                                                 "name": "type",
@@ -2482,30 +2488,36 @@
                                                                                 "type": "collection",
                                                                                 "label": "Reply"
                                                                             }
-                                                                        ]
+                                                                        ],
+                                                                        "type": "array",
+                                                                        "label": "Buttons",
+                                                                        "required": true,
+                                                                        "validate": {
+                                                                            "maxItems": 3
+                                                                        }
                                                                     }
-                                                                ]
+                                                                ],
+                                                                "type": "collection",
+                                                                "label": "Action"
                                                             },
                                                             {
                                                                 "name": "body",
-                                                                "type": "collection",
-                                                                "label": "Body",
                                                                 "spec": [
                                                                     {
                                                                         "name": "text",
                                                                         "type": "text",
                                                                         "label": "Body Text",
+                                                                        "required": true,
                                                                         "validate": {
                                                                             "max": 1024
-                                                                        },
-                                                                        "required": true
+                                                                        }
                                                                     }
-                                                                ]
+                                                                ],
+                                                                "type": "collection",
+                                                                "label": "Body"
                                                             },
                                                             {
                                                                 "name": "header",
-                                                                "type": "collection",
-                                                                "label": "Header",
                                                                 "spec": [
                                                                     {
                                                                         "name": "type",
@@ -2520,12 +2532,12 @@
                                                                             ]
                                                                         }
                                                                     }
-                                                                ]
+                                                                ],
+                                                                "type": "collection",
+                                                                "label": "Header"
                                                             },
                                                             {
                                                                 "name": "footer",
-                                                                "type": "collection",
-                                                                "label": "Footer",
                                                                 "spec": [
                                                                     {
                                                                         "name": "text",
@@ -2535,9 +2547,13 @@
                                                                             "max": 60
                                                                         }
                                                                     }
-                                                                ]
+                                                                ],
+                                                                "type": "collection",
+                                                                "label": "Footer"
                                                             }
-                                                        ]
+                                                        ],
+                                                        "type": "collection",
+                                                        "label": "Interactive"
                                                     }
                                                 ]
                                             }
@@ -2559,28 +2575,28 @@
                                                     [
                                                         {
                                                             "a": "{{4.data.estado}}",
-                                                            "o": "text:pattern",
-                                                            "b": "^(completo|derivado)$"
+                                                            "b": "^(completo|derivado)$",
+                                                            "o": "text:pattern"
                                                         },
                                                         {
                                                             "a": "{{lower(33.mensaje)}}",
-                                                            "o": "text:notpattern",
-                                                            "b": "^\\s*(muchas |mil )?(gracias|graci|ok|okey|dale|listo|perfecto|genial|joya|barbaro|de nada|muy amable|excelente|👍|🙏)[\\s!\\.]*$"
+                                                            "b": "^\\s*(muchas |mil )?(gracias|graci|ok|okey|dale|listo|perfecto|genial|joya|barbaro|de nada|muy amable|excelente|👍|🙏)[\\s!\\.]*$",
+                                                            "o": "text:notpattern"
                                                         }
                                                     ]
                                                 ]
                                             },
                                             "mapper": {
                                                 "key": "{{33.telefono}}",
-                                                "upsert": true,
-                                                "overwriteArrays": false,
                                                 "data": {
                                                     "estado": "menu",
                                                     "nombre": "",
                                                     "preferencia": "",
-                                                    "ultima_actividad": "{{now}}",
-                                                    "primer_mensaje": ""
-                                                }
+                                                    "primer_mensaje": "",
+                                                    "ultima_actividad": "{{now}}"
+                                                },
+                                                "upsert": true,
+                                                "overwriteArrays": false
                                             },
                                             "metadata": {
                                                 "designer": {
@@ -2588,17 +2604,17 @@
                                                     "y": 1979
                                                 },
                                                 "restore": {
-                                                    "parameters": {
-                                                        "datastore": {
-                                                            "label": "conversaciones"
-                                                        }
-                                                    },
                                                     "expect": {
                                                         "upsert": {
                                                             "mode": "chose"
                                                         },
                                                         "overwriteArrays": {
                                                             "mode": "chose"
+                                                        }
+                                                    },
+                                                    "parameters": {
+                                                        "datastore": {
+                                                            "label": "conversaciones"
                                                         }
                                                     }
                                                 },
@@ -2631,8 +2647,6 @@
                                                     },
                                                     {
                                                         "name": "data",
-                                                        "type": "collection",
-                                                        "label": "Record",
                                                         "spec": [
                                                             {
                                                                 "name": "estado",
@@ -2659,7 +2673,9 @@
                                                                 "type": "text",
                                                                 "label": null
                                                             }
-                                                        ]
+                                                        ],
+                                                        "type": "collection",
+                                                        "label": "Record"
                                                     }
                                                 ]
                                             }
@@ -2672,18 +2688,14 @@
                                                 "__IMTCONN__": 10726129
                                             },
                                             "mapper": {
-                                                "fromId": "1265507849982857",
                                                 "to": "{{54 + substring(33.telefono; 3; 6) + 15 + substring(33.telefono; 6)}}",
                                                 "type": "interactive",
+                                                "fromId": "1265507849982857",
                                                 "interactive": {
-                                                    "type": "button",
                                                     "body": {
                                                         "text": "¡Hola de nuevo{{if(length(4.data.nombre) > 0; \", \" + 4.data.nombre; )}}! 👋\r\n\r\n¿En qué te puedo ayudar?"
                                                     },
-                                                    "header": {},
-                                                    "footer": {
-                                                        "text": "¿Te duele algo? Escribime \"me duele\""
-                                                    },
+                                                    "type": "button",
                                                     "action": {
                                                         "buttons": [
                                                             {
@@ -2708,7 +2720,11 @@
                                                                 }
                                                             }
                                                         ]
-                                                    }
+                                                    },
+                                                    "footer": {
+                                                        "text": "¿Te duele algo? Escribime \"me duele\""
+                                                    },
+                                                    "header": {}
                                                 }
                                             },
                                             "metadata": {
@@ -2717,36 +2733,19 @@
                                                     "y": 1986
                                                 },
                                                 "restore": {
-                                                    "parameters": {
-                                                        "__IMTCONN__": {
-                                                            "label": "WhatsApp - Consultorio Aveiro (Employee)",
-                                                            "data": {
-                                                                "scoped": "true",
-                                                                "connection": "whatsapp-business-cloud2"
-                                                            }
-                                                        }
-                                                    },
                                                     "expect": {
+                                                        "type": {
+                                                            "label": "Interactive"
+                                                        },
                                                         "fromId": {
                                                             "mode": "chose",
                                                             "label": "Test Number (+1 555-200-6972)"
-                                                        },
-                                                        "type": {
-                                                            "label": "Interactive"
                                                         },
                                                         "interactive": {
                                                             "nested": {
                                                                 "type": {
                                                                     "mode": "chose",
                                                                     "label": "Reply Buttons"
-                                                                },
-                                                                "header": {
-                                                                    "nested": {
-                                                                        "type": {
-                                                                            "mode": "chose",
-                                                                            "label": "Empty"
-                                                                        }
-                                                                    }
                                                                 },
                                                                 "action": {
                                                                     "nested": {
@@ -2759,8 +2758,25 @@
                                                                             ]
                                                                         }
                                                                     }
+                                                                },
+                                                                "header": {
+                                                                    "nested": {
+                                                                        "type": {
+                                                                            "mode": "chose",
+                                                                            "label": "Empty"
+                                                                        }
+                                                                    }
                                                                 }
                                                             }
+                                                        }
+                                                    },
+                                                    "parameters": {
+                                                        "__IMTCONN__": {
+                                                            "data": {
+                                                                "scoped": "true",
+                                                                "connection": "whatsapp-business-cloud2"
+                                                            },
+                                                            "label": "WhatsApp - Consultorio Aveiro (Employee)"
                                                         }
                                                     }
                                                 },
@@ -2806,8 +2822,6 @@
                                                     },
                                                     {
                                                         "name": "interactive",
-                                                        "type": "collection",
-                                                        "label": "Interactive",
                                                         "spec": [
                                                             {
                                                                 "name": "type",
@@ -2823,17 +2837,9 @@
                                                             },
                                                             {
                                                                 "name": "action",
-                                                                "type": "collection",
-                                                                "label": "Action",
                                                                 "spec": [
                                                                     {
                                                                         "name": "buttons",
-                                                                        "type": "array",
-                                                                        "label": "Buttons",
-                                                                        "validate": {
-                                                                            "maxItems": 3
-                                                                        },
-                                                                        "required": true,
                                                                         "spec": [
                                                                             {
                                                                                 "name": "type",
@@ -2865,30 +2871,36 @@
                                                                                 "type": "collection",
                                                                                 "label": "Reply"
                                                                             }
-                                                                        ]
+                                                                        ],
+                                                                        "type": "array",
+                                                                        "label": "Buttons",
+                                                                        "required": true,
+                                                                        "validate": {
+                                                                            "maxItems": 3
+                                                                        }
                                                                     }
-                                                                ]
+                                                                ],
+                                                                "type": "collection",
+                                                                "label": "Action"
                                                             },
                                                             {
                                                                 "name": "body",
-                                                                "type": "collection",
-                                                                "label": "Body",
                                                                 "spec": [
                                                                     {
                                                                         "name": "text",
                                                                         "type": "text",
                                                                         "label": "Body Text",
+                                                                        "required": true,
                                                                         "validate": {
                                                                             "max": 1024
-                                                                        },
-                                                                        "required": true
+                                                                        }
                                                                     }
-                                                                ]
+                                                                ],
+                                                                "type": "collection",
+                                                                "label": "Body"
                                                             },
                                                             {
                                                                 "name": "header",
-                                                                "type": "collection",
-                                                                "label": "Header",
                                                                 "spec": [
                                                                     {
                                                                         "name": "type",
@@ -2903,12 +2915,12 @@
                                                                             ]
                                                                         }
                                                                     }
-                                                                ]
+                                                                ],
+                                                                "type": "collection",
+                                                                "label": "Header"
                                                             },
                                                             {
                                                                 "name": "footer",
-                                                                "type": "collection",
-                                                                "label": "Footer",
                                                                 "spec": [
                                                                     {
                                                                         "name": "text",
@@ -2918,9 +2930,13 @@
                                                                             "max": 60
                                                                         }
                                                                     }
-                                                                ]
+                                                                ],
+                                                                "type": "collection",
+                                                                "label": "Footer"
                                                             }
-                                                        ]
+                                                        ],
+                                                        "type": "collection",
+                                                        "label": "Interactive"
                                                     }
                                                 ]
                                             }
@@ -2942,25 +2958,25 @@
                                                     [
                                                         {
                                                             "a": "{{4.data.estado}}",
-                                                            "o": "text:pattern",
-                                                            "b": "^(completo|derivado)$"
+                                                            "b": "^(completo|derivado)$",
+                                                            "o": "text:pattern"
                                                         },
                                                         {
                                                             "a": "{{lower(33.mensaje)}}",
-                                                            "o": "text:pattern",
-                                                            "b": "^\\s*(muchas |mil )?(gracias|graci|ok|okey|dale|listo|perfecto|genial|joya|barbaro|de nada|muy amable|excelente|👍|🙏)[\\s!\\.]*$"
+                                                            "b": "^\\s*(muchas |mil )?(gracias|graci|ok|okey|dale|listo|perfecto|genial|joya|barbaro|de nada|muy amable|excelente|👍|🙏)[\\s!\\.]*$",
+                                                            "o": "text:pattern"
                                                         }
                                                     ]
                                                 ]
                                             },
                                             "mapper": {
-                                                "fromId": "1265507849982857",
                                                 "to": "{{54 + substring(33.telefono; 3; 6) + 15 + substring(33.telefono; 6)}}",
-                                                "type": "text",
                                                 "text": {
                                                     "body": "¡De nada! 😊 Cualquier cosa me escribís por acá.",
                                                     "preview_url": false
-                                                }
+                                                },
+                                                "type": "text",
+                                                "fromId": "1265507849982857"
                                             },
                                             "metadata": {
                                                 "designer": {
@@ -2968,29 +2984,29 @@
                                                     "y": 2416
                                                 },
                                                 "restore": {
-                                                    "parameters": {
-                                                        "__IMTCONN__": {
-                                                            "label": "WhatsApp - Consultorio Aveiro (Employee)",
-                                                            "data": {
-                                                                "scoped": "true",
-                                                                "connection": "whatsapp-business-cloud2"
-                                                            }
-                                                        }
-                                                    },
                                                     "expect": {
-                                                        "fromId": {
-                                                            "mode": "chose",
-                                                            "label": "Test Number (+1 555-200-6972)"
-                                                        },
-                                                        "type": {
-                                                            "label": "Text"
-                                                        },
                                                         "text": {
                                                             "nested": {
                                                                 "preview_url": {
                                                                     "mode": "chose"
                                                                 }
                                                             }
+                                                        },
+                                                        "type": {
+                                                            "label": "Text"
+                                                        },
+                                                        "fromId": {
+                                                            "mode": "chose",
+                                                            "label": "Test Number (+1 555-200-6972)"
+                                                        }
+                                                    },
+                                                    "parameters": {
+                                                        "__IMTCONN__": {
+                                                            "data": {
+                                                                "scoped": "true",
+                                                                "connection": "whatsapp-business-cloud2"
+                                                            },
+                                                            "label": "WhatsApp - Consultorio Aveiro (Employee)"
                                                         }
                                                     }
                                                 },
@@ -3036,17 +3052,15 @@
                                                     },
                                                     {
                                                         "name": "text",
-                                                        "type": "collection",
-                                                        "label": "Text",
                                                         "spec": [
                                                             {
                                                                 "name": "body",
                                                                 "type": "text",
                                                                 "label": "Body",
+                                                                "required": true,
                                                                 "validate": {
                                                                     "max": 4096
-                                                                },
-                                                                "required": true
+                                                                }
                                                             },
                                                             {
                                                                 "name": "preview_url",
@@ -3054,7 +3068,9 @@
                                                                 "label": "Preview URL",
                                                                 "required": true
                                                             }
-                                                        ]
+                                                        ],
+                                                        "type": "collection",
+                                                        "label": "Text"
                                                     }
                                                 ]
                                             }
@@ -3080,8 +3096,8 @@
                                     [
                                         {
                                             "a": "{{lower(33.mensaje)}}",
-                                            "o": "text:pattern",
-                                            "b": "\\b(dolor\\b|dolores de|duele|duelen|molest|hinch|urgen|emergenc|sangr|flem|absces|infectad|sensib|no aguanto|matando)"
+                                            "b": "\\b(dolor\\b|dolores de|duele|duelen|molest|hinch|urgen|emergenc|sangr|flem|absces|infectad|sensib|no aguanto|matando)",
+                                            "o": "text:pattern"
                                         }
                                     ]
                                 ]
@@ -3201,15 +3217,15 @@
                             },
                             "mapper": {
                                 "key": "{{33.telefono}}",
-                                "upsert": true,
-                                "overwriteArrays": false,
                                 "data": {
                                     "estado": "derivado",
                                     "nombre": "",
                                     "preferencia": "",
-                                    "ultima_actividad": "{{now}}",
-                                    "primer_mensaje": ""
-                                }
+                                    "primer_mensaje": "",
+                                    "ultima_actividad": "{{now}}"
+                                },
+                                "upsert": true,
+                                "overwriteArrays": false
                             },
                             "metadata": {
                                 "designer": {
@@ -3217,17 +3233,17 @@
                                     "y": 448
                                 },
                                 "restore": {
-                                    "parameters": {
-                                        "datastore": {
-                                            "label": "conversaciones"
-                                        }
-                                    },
                                     "expect": {
                                         "upsert": {
                                             "mode": "chose"
                                         },
                                         "overwriteArrays": {
                                             "mode": "chose"
+                                        }
+                                    },
+                                    "parameters": {
+                                        "datastore": {
+                                            "label": "conversaciones"
                                         }
                                     }
                                 },
@@ -3260,8 +3276,6 @@
                                     },
                                     {
                                         "name": "data",
-                                        "type": "collection",
-                                        "label": "Record",
                                         "spec": [
                                             {
                                                 "name": "estado",
@@ -3288,7 +3302,9 @@
                                                 "type": "text",
                                                 "label": null
                                             }
-                                        ]
+                                        ],
+                                        "type": "collection",
+                                        "label": "Record"
                                     }
                                 ]
                             }
@@ -3301,15 +3317,8 @@
                                 "__IMTCONN__": 10428105
                             },
                             "mapper": {
-                                "mode": "select",
-                                "insertUnformatted": false,
-                                "valueInputOption": "USER_ENTERED",
-                                "insertDataOption": "INSERT_ROWS",
                                 "from": "drive",
-                                "spreadsheetId": "/1ah4YbV10Gf3NSgBnOh6uno0Kxpb2nxFyAvI4J7gWTGE",
-                                "sheetId": "Hoja 1",
-                                "includesHeaders": true,
-                                "useColumnHeaders": false,
+                                "mode": "select",
                                 "values": {
                                     "0": "{{formatDate(now; DD / MM / YYYY - HH:mm; America / Argentina / Buenos_Aires)}}",
                                     "1": "{{33.nombre_wa}}",
@@ -3318,7 +3327,14 @@
                                     "5": "https://wa.me/{{33.telefono}}",
                                     "6": "{{33.mensaje}}",
                                     "7": "{{33.nombre_wa}}"
-                                }
+                                },
+                                "sheetId": "Hoja 1",
+                                "spreadsheetId": "/1ah4YbV10Gf3NSgBnOh6uno0Kxpb2nxFyAvI4J7gWTGE",
+                                "includesHeaders": true,
+                                "insertDataOption": "INSERT_ROWS",
+                                "useColumnHeaders": false,
+                                "valueInputOption": "USER_ENTERED",
+                                "insertUnformatted": false
                             },
                             "metadata": {
                                 "designer": {
@@ -3326,47 +3342,47 @@
                                     "y": 448
                                 },
                                 "restore": {
-                                    "parameters": {
-                                        "__IMTCONN__": {
-                                            "label": "alej0's Google connection (alejoaveiro05@gmail.com)",
-                                            "data": {
-                                                "scoped": "true",
-                                                "connection": "google"
-                                            }
-                                        }
-                                    },
                                     "expect": {
+                                        "from": {
+                                            "label": "My Drive"
+                                        },
                                         "mode": {
                                             "label": "Search by path"
                                         },
-                                        "insertUnformatted": {
-                                            "mode": "chose"
-                                        },
-                                        "valueInputOption": {
-                                            "mode": "chose",
-                                            "label": "User entered"
-                                        },
-                                        "insertDataOption": {
-                                            "mode": "chose",
-                                            "label": "Insert rows"
-                                        },
-                                        "from": {
-                                            "label": "My Drive"
+                                        "sheetId": {
+                                            "label": "Hoja 1",
+                                            "collapsed": true
                                         },
                                         "spreadsheetId": {
                                             "path": [
                                                 "pedidos"
                                             ]
                                         },
-                                        "sheetId": {
-                                            "collapsed": true,
-                                            "label": "Hoja 1"
-                                        },
                                         "includesHeaders": {
                                             "label": "Yes"
                                         },
+                                        "insertDataOption": {
+                                            "mode": "chose",
+                                            "label": "Insert rows"
+                                        },
                                         "useColumnHeaders": {
                                             "label": "No"
+                                        },
+                                        "valueInputOption": {
+                                            "mode": "chose",
+                                            "label": "User entered"
+                                        },
+                                        "insertUnformatted": {
+                                            "mode": "chose"
+                                        }
+                                    },
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "google"
+                                            },
+                                            "label": "alej0's Google connection (alejoaveiro05@gmail.com)"
                                         }
                                     }
                                 },
@@ -3472,22 +3488,6 @@
                                     },
                                     {
                                         "name": "values",
-                                        "type": "collection",
-                                        "label": "Values in columns",
-                                        "metadata": [
-                                            [
-                                                [
-                                                    "fecha",
-                                                    "nombre",
-                                                    "teléfono",
-                                                    "preferencias",
-                                                    "gestión",
-                                                    "escribir",
-                                                    "primer_mensaje",
-                                                    "nombre_wa"
-                                                ]
-                                            ]
-                                        ],
                                         "spec": [
                                             {
                                                 "name": "0",
@@ -3619,6 +3619,22 @@
                                                 "type": "text",
                                                 "label": "(Z)"
                                             }
+                                        ],
+                                        "type": "collection",
+                                        "label": "Values in columns",
+                                        "metadata": [
+                                            [
+                                                [
+                                                    "fecha",
+                                                    "nombre",
+                                                    "teléfono",
+                                                    "preferencias",
+                                                    "gestión",
+                                                    "escribir",
+                                                    "primer_mensaje",
+                                                    "nombre_wa"
+                                                ]
+                                            ]
                                         ]
                                     }
                                 ]
@@ -3745,18 +3761,14 @@
                                 ]
                             },
                             "mapper": {
-                                "fromId": "1265507849982857",
                                 "to": "{{54 + substring(33.telefono; 3; 6) + 15 + substring(33.telefono; 6)}}",
                                 "type": "interactive",
+                                "fromId": "1265507849982857",
                                 "interactive": {
-                                    "type": "button",
                                     "body": {
                                         "text": "¡Hola! 👋 Soy el asistente del consultorio del *Dr. Aveiro*.\r\nTodavía no puedo escuchar audios ni ver fotos, mil disculpas.\r\nSi querés, tocá una opción y seguimos por acá:"
                                     },
-                                    "header": {},
-                                    "footer": {
-                                        "text": "¿Te duele algo? Escribime \"me duele\""
-                                    },
+                                    "type": "button",
                                     "action": {
                                         "buttons": [
                                             {
@@ -3781,7 +3793,11 @@
                                                 }
                                             }
                                         ]
-                                    }
+                                    },
+                                    "footer": {
+                                        "text": "¿Te duele algo? Escribime \"me duele\""
+                                    },
+                                    "header": {}
                                 }
                             },
                             "metadata": {
@@ -3790,36 +3806,19 @@
                                     "y": 1756
                                 },
                                 "restore": {
-                                    "parameters": {
-                                        "__IMTCONN__": {
-                                            "label": "WhatsApp - Consultorio Aveiro (Employee)",
-                                            "data": {
-                                                "scoped": "true",
-                                                "connection": "whatsapp-business-cloud2"
-                                            }
-                                        }
-                                    },
                                     "expect": {
+                                        "type": {
+                                            "label": "Interactive"
+                                        },
                                         "fromId": {
                                             "mode": "chose",
                                             "label": "Test Number (+1 555-200-6972)"
-                                        },
-                                        "type": {
-                                            "label": "Interactive"
                                         },
                                         "interactive": {
                                             "nested": {
                                                 "type": {
                                                     "mode": "chose",
                                                     "label": "Reply Buttons"
-                                                },
-                                                "header": {
-                                                    "nested": {
-                                                        "type": {
-                                                            "mode": "chose",
-                                                            "label": "Empty"
-                                                        }
-                                                    }
                                                 },
                                                 "action": {
                                                     "nested": {
@@ -3832,8 +3831,25 @@
                                                             ]
                                                         }
                                                     }
+                                                },
+                                                "header": {
+                                                    "nested": {
+                                                        "type": {
+                                                            "mode": "chose",
+                                                            "label": "Empty"
+                                                        }
+                                                    }
                                                 }
                                             }
+                                        }
+                                    },
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "whatsapp-business-cloud2"
+                                            },
+                                            "label": "WhatsApp - Consultorio Aveiro (Employee)"
                                         }
                                     }
                                 },
@@ -3879,8 +3895,6 @@
                                     },
                                     {
                                         "name": "interactive",
-                                        "type": "collection",
-                                        "label": "Interactive",
                                         "spec": [
                                             {
                                                 "name": "type",
@@ -3896,17 +3910,9 @@
                                             },
                                             {
                                                 "name": "action",
-                                                "type": "collection",
-                                                "label": "Action",
                                                 "spec": [
                                                     {
                                                         "name": "buttons",
-                                                        "type": "array",
-                                                        "label": "Buttons",
-                                                        "validate": {
-                                                            "maxItems": 3
-                                                        },
-                                                        "required": true,
                                                         "spec": [
                                                             {
                                                                 "name": "type",
@@ -3938,30 +3944,36 @@
                                                                 "type": "collection",
                                                                 "label": "Reply"
                                                             }
-                                                        ]
+                                                        ],
+                                                        "type": "array",
+                                                        "label": "Buttons",
+                                                        "required": true,
+                                                        "validate": {
+                                                            "maxItems": 3
+                                                        }
                                                     }
-                                                ]
+                                                ],
+                                                "type": "collection",
+                                                "label": "Action"
                                             },
                                             {
                                                 "name": "body",
-                                                "type": "collection",
-                                                "label": "Body",
                                                 "spec": [
                                                     {
                                                         "name": "text",
                                                         "type": "text",
                                                         "label": "Body Text",
+                                                        "required": true,
                                                         "validate": {
                                                             "max": 1024
-                                                        },
-                                                        "required": true
+                                                        }
                                                     }
-                                                ]
+                                                ],
+                                                "type": "collection",
+                                                "label": "Body"
                                             },
                                             {
                                                 "name": "header",
-                                                "type": "collection",
-                                                "label": "Header",
                                                 "spec": [
                                                     {
                                                         "name": "type",
@@ -3976,12 +3988,12 @@
                                                             ]
                                                         }
                                                     }
-                                                ]
+                                                ],
+                                                "type": "collection",
+                                                "label": "Header"
                                             },
                                             {
                                                 "name": "footer",
-                                                "type": "collection",
-                                                "label": "Footer",
                                                 "spec": [
                                                     {
                                                         "name": "text",
@@ -3991,9 +4003,13 @@
                                                             "max": 60
                                                         }
                                                     }
-                                                ]
+                                                ],
+                                                "type": "collection",
+                                                "label": "Footer"
                                             }
-                                        ]
+                                        ],
+                                        "type": "collection",
+                                        "label": "Interactive"
                                     }
                                 ]
                             }

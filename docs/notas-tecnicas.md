@@ -275,6 +275,105 @@ ruido pesa tanto como la conversación.
 
 ---
 
+### El operador y el valor son una sola unidad
+
+**Síntoma:** se cambia el valor de una condición de `1` a `^(1|turno)$` y la
+rama deja de activarse. No hay error.
+
+**Causa:** se cambió el valor pero no el operador. Con `Equal to`, Make
+compara si el texto es **literalmente** `^(1|turno)$`, caracter por caracter.
+Nadie escribe eso nunca.
+
+**Solución:** al cambiar un valor a una expresión regular, cambiar también el
+operador a `Matches pattern`. **Son una sola cosa**: una condición con el
+operador viejo y el valor nuevo es válida, no da error, y está muerta.
+
+---
+
+### `Add/replace` reemplaza todo; `Update` toca solo lo mapeado
+
+**Síntoma:** un campo del data store se guarda bien y aparece vacío más
+tarde, sin que ningún módulo lo borre explícitamente.
+
+**Causa:** un `Add/replace a record` en el medio de la conversación. Reescribe
+el registro **entero**: todo campo que no se le mapee queda vacío.
+
+**Solución:** `Add/replace` solo donde el registro se crea. En todos los
+pasos siguientes, `Update a record`, que ignora los campos que no se mapean
+(y también los que se mapean vacíos).
+
+**Cómo se detecta:** si un campo desaparece siempre en el mismo paso de la
+conversación, el culpable es lo que corre en ese paso, no lo que lo escribió.
+
+---
+
+### La etiqueta que se ve no es el nombre del campo
+
+**Síntoma:** una ruta escrita a mano devuelve vacío para siempre, sin error.
+
+**Causa:** el panel de mapeo muestra la **etiqueta** (`Record`) y no el
+**nombre** interno (`data`). `{{4.Record.campo}}` no existe; lo correcto es
+`{{4.data.campo}}`.
+
+**Solución:** arrastrar el chip desde el panel —Make escribe la ruta interna
+correcta— y reservar el tipeo manual para cuando se conoce el nombre real,
+que se ve en el blueprint exportado.
+
+**Regla:** una ruta inexistente en Make no explota, **devuelve nada**.
+
+---
+
+### Un `$` con un espacio atrás no coincide nunca
+
+**Síntoma:** un patrón que se ve bien no matchea jamás.
+
+**Causa:** `^(completo|derivado)$ ` — hay un espacio después del `$`. El `$`
+es "fin del texto"; pedirle un caracter **después del fin** es imposible.
+
+**Solución:** borrar el campo entero y reescribirlo sin pegar. Los espacios
+al final son invisibles y ya costaron tres bugs distintos en este proyecto.
+
+---
+
+### Dos ramas complementarias comparten la condición, negada
+
+**Síntoma:** una persona recibe dos respuestas seguidas, o ninguna.
+
+**Causa:** las ramas "esto sí" y "esto no" se escribieron con **dos listas
+distintas** mantenidas a mano. Al agregar una palabra a una y no a la otra,
+aparecen mensajes que caen en las dos o en ninguna.
+
+**Solución:** una sola condición, usada en positivo en una rama y en negativo
+en la otra (`Matches pattern` / `Does not match pattern`). Así es
+**imposible** que se solapen o que quede un hueco.
+
+**Por qué importa:** un router de Make manda el bundle a **todas** las rutas
+que aceptan, no a la primera. No hay if/else.
+
+---
+
+### Un botón no manda texto
+
+**Síntoma:** se agregan botones interactivos y al tocarlos no pasa nada.
+
+**Causa:** cuando alguien toca un botón, el payload trae
+`interactive.button_reply.id` y **no** `text.body`. La variable que extrae el
+texto llega vacía, y los filtros que exigen que exista bloquean el bundle.
+
+**Solución:** normalizar en la entrada, apenas llega el mensaje:
+
+```
+{{ifempty( ...messages[1].text.body ; ...messages[1].interactive.button_reply.id )}}
+```
+
+Una sola variable con las dos formas adentro. Ningún módulo aguas abajo se
+tiene que enterar de que existen dos.
+
+**Y en los filtros:** aceptar las dos —`^(1|turno)$`— para que escribir el
+número siga funcionando igual que tocar el botón.
+
+---
+
 # JavaScript
 
 ### Una cuenta devuelve `NaN`
@@ -435,3 +534,26 @@ solo entra lo que se nombró.
 pedirlo. No sirve como nombre formal —la gente pone apodos, emojis o el
 nombre de su negocio— pero es información gratis que ayuda a identificar a
 quien escribe.
+
+---
+
+### Guardá el dato, no la foto del dato
+
+**Síntoma:** una fecha guardada como `"04/09/2026 - 11:51"` se ve perfecta y
+no sirve para nada: no se puede ordenar, ni comparar, ni restar.
+
+**Causa:** se guardó el **formato de mostrar** en vez del valor. Y encima,
+distintos módulos lo formatearon distinto —uno en UTC, otro en hora local—
+sin que se notara, porque el último en escribir tapaba al anterior.
+
+**Solución:** en el almacenamiento va el instante crudo (`now`, tipo Date).
+El `formatDate` con zona horaria va **solo** donde lo lee un humano: la
+planilla, el mensaje.
+
+**Cómo verificar en un data store de Make:** la columna muestra un ícono de
+**calendario** si el campo es Date, y el de texto si es texto.
+
+**Por qué importa:** funciones como *"derivar al humano si la conversación
+quedó a medias más de 24 horas"* son una resta de fechas. Sobre un texto no
+se pueden construir — y cuando te das cuenta, los registros viejos ya
+quedaron así.
