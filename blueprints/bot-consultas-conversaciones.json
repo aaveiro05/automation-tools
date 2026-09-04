@@ -492,7 +492,7 @@
                                                 "fromId": "1265507849982857",
                                                 "interactive": {
                                                     "body": {
-                                                        "text": "¡Hola! 👋 Soy el asistente del consultorio del *Dr. Aveiro*.\r\n\r\nContesto en seguida, a cualquier hora. Contame qué necesitás:"
+                                                        "text": "¡Hola! 👋 Soy el asistente del consultorio del *Dr. Aveiro*.\r\n\r\nContesto a cualquier hora. Contame qué necesitás:"
                                                     },
                                                     "type": "button",
                                                     "action": {
@@ -763,8 +763,7 @@
                                                         },
                                                         {
                                                             "a": "{{4.data.estado}}",
-                                                            "b": "menu",
-                                                            "o": "text:equal"
+                                                            "o": "exist"
                                                         }
                                                     ]
                                                 ]
@@ -873,7 +872,7 @@
                                             "mapper": {
                                                 "to": "{{54 + substring(33.telefono; 3; 6) + 15 + substring(33.telefono; 6)}}",
                                                 "text": {
-                                                    "body": "Perfecto. ¿Cómo te llamás?",
+                                                    "body": "Perfecto. Colocá tu nombre y apellido",
                                                     "preview_url": false
                                                 },
                                                 "type": "text",
@@ -995,6 +994,11 @@
                                                             "a": "{{4.data.estado}}",
                                                             "b": "pidiendo_nombre",
                                                             "o": "text:equal"
+                                                        },
+                                                        {
+                                                            "a": "{{lower(33.mensaje)}}",
+                                                            "b": "^(1|2|3|turno|info|doctor)$",
+                                                            "o": "text:notpattern"
                                                         }
                                                     ]
                                                 ]
@@ -1225,6 +1229,11 @@
                                                             "a": "{{4.data.estado}}",
                                                             "b": "pidiendo_preferencia",
                                                             "o": "text:equal"
+                                                        },
+                                                        {
+                                                            "a": "{{lower(33.mensaje)}}",
+                                                            "b": "^(1|2|3|turno|info|doctor)$",
+                                                            "o": "text:notpattern"
                                                         }
                                                     ]
                                                 ]
@@ -1664,7 +1673,7 @@
                                             "mapper": {
                                                 "to": "{{54 + substring(33.telefono; 3; 6) + 15 + substring(33.telefono; 6)}}",
                                                 "text": {
-                                                    "body": "Listo, {{4.data.nombre}}. Ya quedó anotado tu pedido.\r\nEl Dr. te escribe hoy mismo para confirmar el horario. Atiende hasta las 19, así que puede ser al mediodía o a la tarde.\r\nTe recuerdo que la consulta vale $20.000.",
+                                                    "body": "Listo, {{4.data.nombre}}. Ya quedó anotado tu pedido.\r\nEl Dr. te escribe para confirmarte el horario.\r\nTe recuerdo que la consulta vale $20.000.\n📍 Acá está el consultorio: https://www.google.com/maps/place/Rivadavia+1275,+P3600+Formosa/@-26.1876098,-58.1645888,21z/data=!4m6!3m5!1s0x945ca5df90babfe1:0x54ed3a234bf010c5!8m2!3d-26.1876098!4d-58.1644279!16s%2Fg%2F11s9gqmpb5?entry=ttu&g_ep=EgoyMDI2MDkwMS4wIKXMDSoASAFQAw%3D%3D",
                                                     "preview_url": false
                                                 },
                                                 "type": "text",
@@ -1784,12 +1793,23 @@
                                                     [
                                                         {
                                                             "a": "{{4.data.estado}}",
+                                                            "o": "exist"
+                                                        },
+                                                        {
+                                                            "a": "{{lower(33.mensaje)}}",
+                                                            "b": "^(2|info)$",
+                                                            "o": "text:pattern"
+                                                        }
+                                                    ],
+                                                    [
+                                                        {
+                                                            "a": "{{4.data.estado}}",
                                                             "b": "menu",
                                                             "o": "text:equal"
                                                         },
                                                         {
                                                             "a": "{{lower(33.mensaje)}}",
-                                                            "b": "^(2|info)$",
+                                                            "b": "precio|cuanto|cuánto|sale|valor|horario|atiend|direcc|donde|dónde|obra social|carilla|blanque|implante|bracket|ortodonc|limpieza|arreglo|conducto|extracc|protesis|prótesis",
                                                             "o": "text:pattern"
                                                         }
                                                     ]
@@ -1801,7 +1821,7 @@
                                                 "fromId": "1265507849982857",
                                                 "interactive": {
                                                     "body": {
-                                                        "text": "💰 *La consulta*\r\n$20.000 — incluye revisión y diagnóstico.\r\nEl presupuesto del tratamiento lo da el Dr. después de verte.\r\n\r\n🩺 *Obras sociales*\r\nIASEP y Sancor. También atiende particular.\r\nSi tenés otra, consultale al Dr.\r\n\r\n🕐 *Horarios*\r\nLunes a viernes, de 7:30 a 11:30 y de 16 a 19.\r\n\r\n📍 *Dónde*\r\n[calle y número], Formosa\r\n\r\n💳 *Pagos*\r\nEfectivo, débito, crédito y transferencia."
+                                                        "text": "🦷 *Qué se atiende*\r\nLimpieza · arreglos · conductos · extracciones · prótesis · blanqueamiento · carillas\r\n\r\nEl precio de cada tratamiento depende de lo que necesites, y eso lo define el Dr. cuando te revisa.\r\n\r\n💰 *La consulta*\r\n$20.000 — incluye revisión y diagnóstico.\r\n\r\n🩺 *Obras sociales*\r\nIASEP y Sancor. También atiende particular.\r\nSi tenés otra, consultale al Dr.\r\n\r\n🕐 *Horarios*\r\nLunes a viernes, de 7:30 a 11:30 y de 16 a 19.\r\n\r\n📍 *Dónde*\r\nRivadavia 1275, Formosa\r\n\r\n💳 *Pagos*\r\nEfectivo, débito, crédito y transferencia."
                                                     },
                                                     "type": "button",
                                                     "action": {
@@ -2058,8 +2078,7 @@
                                                     [
                                                         {
                                                             "a": "{{4.data.estado}}",
-                                                            "b": "menu",
-                                                            "o": "text:equal"
+                                                            "o": "exist"
                                                         },
                                                         {
                                                             "a": "{{lower(33.mensaje)}}",
@@ -2275,6 +2294,336 @@
                                                     }
                                                 ]
                                             }
+                                        },
+                                        {
+                                            "id": 66,
+                                            "module": "google-sheets:addRow",
+                                            "version": 2,
+                                            "parameters": {
+                                                "__IMTCONN__": 10428105
+                                            },
+                                            "mapper": {
+                                                "from": "drive",
+                                                "mode": "select",
+                                                "values": {
+                                                    "0": "{{formatDate(now; \"DD/MM/YYYY - HH:mm \"; \"America/Argentina/Buenos_Aires\")}}",
+                                                    "1": "{{ifempty(4.data.nombre; 33.nombre_wa)}}",
+                                                    "2": "{{33.telefono}}",
+                                                    "4": "pendiente",
+                                                    "5": "https://wa.me/{{33.telefono}}",
+                                                    "6": "{{4.data.primer_mensaje}}",
+                                                    "7": "{{33.nombre_wa}}"
+                                                },
+                                                "sheetId": "Hoja 1",
+                                                "spreadsheetId": "/1ah4YbV10Gf3NSgBnOh6uno0Kxpb2nxFyAvI4J7gWTGE",
+                                                "includesHeaders": true,
+                                                "insertDataOption": "INSERT_ROWS",
+                                                "useColumnHeaders": false,
+                                                "valueInputOption": "USER_ENTERED",
+                                                "insertUnformatted": false
+                                            },
+                                            "metadata": {
+                                                "designer": {
+                                                    "x": 2778,
+                                                    "y": 1311
+                                                },
+                                                "restore": {
+                                                    "expect": {
+                                                        "from": {
+                                                            "label": "My Drive"
+                                                        },
+                                                        "mode": {
+                                                            "label": "Search by path"
+                                                        },
+                                                        "sheetId": {
+                                                            "label": "Hoja 1"
+                                                        },
+                                                        "spreadsheetId": {
+                                                            "path": [
+                                                                "pedidos"
+                                                            ]
+                                                        },
+                                                        "includesHeaders": {
+                                                            "label": "Yes"
+                                                        },
+                                                        "insertDataOption": {
+                                                            "mode": "chose",
+                                                            "label": "Insert rows"
+                                                        },
+                                                        "useColumnHeaders": {
+                                                            "label": "No"
+                                                        },
+                                                        "valueInputOption": {
+                                                            "mode": "chose",
+                                                            "label": "User entered"
+                                                        },
+                                                        "insertUnformatted": {
+                                                            "mode": "chose"
+                                                        }
+                                                    },
+                                                    "parameters": {
+                                                        "__IMTCONN__": {
+                                                            "data": {
+                                                                "scoped": "true",
+                                                                "connection": "google"
+                                                            },
+                                                            "label": "alej0's Google connection (alejoaveiro05@gmail.com)"
+                                                        }
+                                                    }
+                                                },
+                                                "parameters": [
+                                                    {
+                                                        "name": "__IMTCONN__",
+                                                        "type": "account:google",
+                                                        "label": "Connection",
+                                                        "required": true
+                                                    }
+                                                ],
+                                                "expect": [
+                                                    {
+                                                        "name": "mode",
+                                                        "type": "select",
+                                                        "label": "Search Method",
+                                                        "required": true,
+                                                        "validate": {
+                                                            "enum": [
+                                                                "select",
+                                                                "fromAll",
+                                                                "map"
+                                                            ]
+                                                        }
+                                                    },
+                                                    {
+                                                        "name": "insertUnformatted",
+                                                        "type": "boolean",
+                                                        "label": "Unformatted",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "valueInputOption",
+                                                        "type": "select",
+                                                        "label": "Value input option",
+                                                        "required": true,
+                                                        "validate": {
+                                                            "enum": [
+                                                                "USER_ENTERED",
+                                                                "RAW"
+                                                            ]
+                                                        }
+                                                    },
+                                                    {
+                                                        "name": "insertDataOption",
+                                                        "type": "select",
+                                                        "label": "Insert data option",
+                                                        "validate": {
+                                                            "enum": [
+                                                                "INSERT_ROWS",
+                                                                "OVERWRITE"
+                                                            ]
+                                                        }
+                                                    },
+                                                    {
+                                                        "name": "from",
+                                                        "type": "select",
+                                                        "label": "Drive",
+                                                        "required": true,
+                                                        "validate": {
+                                                            "enum": [
+                                                                "drive",
+                                                                "share",
+                                                                "team"
+                                                            ]
+                                                        }
+                                                    },
+                                                    {
+                                                        "name": "spreadsheetId",
+                                                        "type": "file",
+                                                        "label": "Spreadsheet Name",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "sheetId",
+                                                        "type": "select",
+                                                        "label": "Sheet Name",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "includesHeaders",
+                                                        "type": "select",
+                                                        "label": "Table contains headers",
+                                                        "required": true,
+                                                        "validate": {
+                                                            "enum": [
+                                                                true,
+                                                                false
+                                                            ]
+                                                        }
+                                                    },
+                                                    {
+                                                        "name": "useColumnHeaders",
+                                                        "type": "select",
+                                                        "label": "Use column headers as IDs of the columns",
+                                                        "required": true,
+                                                        "validate": {
+                                                            "enum": [
+                                                                true,
+                                                                false
+                                                            ]
+                                                        }
+                                                    },
+                                                    {
+                                                        "name": "values",
+                                                        "spec": [
+                                                            {
+                                                                "name": "0",
+                                                                "type": "text",
+                                                                "label": "fecha (A)"
+                                                            },
+                                                            {
+                                                                "name": "1",
+                                                                "type": "text",
+                                                                "label": "nombre (B)"
+                                                            },
+                                                            {
+                                                                "name": "2",
+                                                                "type": "text",
+                                                                "label": "teléfono (C)"
+                                                            },
+                                                            {
+                                                                "name": "3",
+                                                                "type": "text",
+                                                                "label": "preferencias (D)"
+                                                            },
+                                                            {
+                                                                "name": "4",
+                                                                "type": "text",
+                                                                "label": "gestión (E)"
+                                                            },
+                                                            {
+                                                                "name": "5",
+                                                                "type": "text",
+                                                                "label": "escribir (F)"
+                                                            },
+                                                            {
+                                                                "name": "6",
+                                                                "type": "text",
+                                                                "label": "primer_mensaje (G)"
+                                                            },
+                                                            {
+                                                                "name": "7",
+                                                                "type": "text",
+                                                                "label": "nombre_wa (H)"
+                                                            },
+                                                            {
+                                                                "name": "8",
+                                                                "type": "text",
+                                                                "label": "(I)"
+                                                            },
+                                                            {
+                                                                "name": "9",
+                                                                "type": "text",
+                                                                "label": "(J)"
+                                                            },
+                                                            {
+                                                                "name": "10",
+                                                                "type": "text",
+                                                                "label": "(K)"
+                                                            },
+                                                            {
+                                                                "name": "11",
+                                                                "type": "text",
+                                                                "label": "(L)"
+                                                            },
+                                                            {
+                                                                "name": "12",
+                                                                "type": "text",
+                                                                "label": "(M)"
+                                                            },
+                                                            {
+                                                                "name": "13",
+                                                                "type": "text",
+                                                                "label": "(N)"
+                                                            },
+                                                            {
+                                                                "name": "14",
+                                                                "type": "text",
+                                                                "label": "(O)"
+                                                            },
+                                                            {
+                                                                "name": "15",
+                                                                "type": "text",
+                                                                "label": "(P)"
+                                                            },
+                                                            {
+                                                                "name": "16",
+                                                                "type": "text",
+                                                                "label": "(Q)"
+                                                            },
+                                                            {
+                                                                "name": "17",
+                                                                "type": "text",
+                                                                "label": "(R)"
+                                                            },
+                                                            {
+                                                                "name": "18",
+                                                                "type": "text",
+                                                                "label": "(S)"
+                                                            },
+                                                            {
+                                                                "name": "19",
+                                                                "type": "text",
+                                                                "label": "(T)"
+                                                            },
+                                                            {
+                                                                "name": "20",
+                                                                "type": "text",
+                                                                "label": "(U)"
+                                                            },
+                                                            {
+                                                                "name": "21",
+                                                                "type": "text",
+                                                                "label": "(V)"
+                                                            },
+                                                            {
+                                                                "name": "22",
+                                                                "type": "text",
+                                                                "label": "(W)"
+                                                            },
+                                                            {
+                                                                "name": "23",
+                                                                "type": "text",
+                                                                "label": "(X)"
+                                                            },
+                                                            {
+                                                                "name": "24",
+                                                                "type": "text",
+                                                                "label": "(Y)"
+                                                            },
+                                                            {
+                                                                "name": "25",
+                                                                "type": "text",
+                                                                "label": "(Z)"
+                                                            }
+                                                        ],
+                                                        "type": "collection",
+                                                        "label": "Values in columns",
+                                                        "metadata": [
+                                                            [
+                                                                [
+                                                                    "fecha",
+                                                                    "nombre",
+                                                                    "teléfono",
+                                                                    "preferencias",
+                                                                    "gestión",
+                                                                    "escribir",
+                                                                    "primer_mensaje",
+                                                                    "nombre_wa"
+                                                                ]
+                                                            ]
+                                                        ]
+                                                    }
+                                                ]
+                                            }
                                         }
                                     ]
                                 },
@@ -2300,6 +2649,11 @@
                                                             "a": "{{33.mensaje}}",
                                                             "b": "^(1|2|3|turno|info|doctor)$",
                                                             "o": "text:notpattern"
+                                                        },
+                                                        {
+                                                            "a": "{{lower(33.mensaje)}}",
+                                                            "b": "^(2|info)$|precio|cuanto|cuánto|sale|valor|horario|atiend|direcc|donde|dónde|obra social|carilla|blanque|implante|bracket|ortodonc|limpieza|arreglo|conducto|extracc|protesis|prótesis",
+                                                            "o": "text:notpattern"
                                                         }
                                                     ]
                                                 ]
@@ -2310,7 +2664,7 @@
                                                 "fromId": "1265507849982857",
                                                 "interactive": {
                                                     "body": {
-                                                        "text": "Uy, perdoname — eso no lo entendí 🙈\r\nSoy el asistente del consultorio y por ahora manejo solo estas opciones:"
+                                                        "text": "Uy, perdoname — eso no te puedo responder.\n\r\nSoy el asistente del consultorio y por ahora manejo solo estas opciones:"
                                                     },
                                                     "type": "button",
                                                     "action": {
@@ -2581,6 +2935,11 @@
                                                         {
                                                             "a": "{{lower(33.mensaje)}}",
                                                             "b": "^\\s*(muchas |mil )?(gracias|graci|ok|okey|dale|listo|perfecto|genial|joya|barbaro|de nada|muy amable|excelente|👍|🙏)[\\s!\\.]*$",
+                                                            "o": "text:notpattern"
+                                                        },
+                                                        {
+                                                            "a": "{{lower(33.mensaje)}}",
+                                                            "b": "^(1|2|3|turno|info|doctor)$",
                                                             "o": "text:notpattern"
                                                         }
                                                     ]
@@ -3209,6 +3568,100 @@
                             }
                         },
                         {
+                            "id": 65,
+                            "module": "datastore:GetRecord",
+                            "version": 1,
+                            "parameters": {
+                                "datastore": 135130
+                            },
+                            "filter": null,
+                            "mapper": {
+                                "key": "{{33.telefono}}",
+                                "returnWrapped": true
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 896,
+                                    "y": 195
+                                },
+                                "restore": {
+                                    "parameters": {
+                                        "datastore": {
+                                            "label": "conversaciones"
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "datastore",
+                                        "type": "datastore",
+                                        "label": "Data store",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "key",
+                                        "type": "text",
+                                        "label": "Key",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "returnWrapped",
+                                        "type": "boolean",
+                                        "label": "Return Wrapped Output",
+                                        "required": true
+                                    }
+                                ],
+                                "interface": [
+                                    {
+                                        "name": "key",
+                                        "type": "text",
+                                        "label": "Key"
+                                    },
+                                    {
+                                        "name": "data",
+                                        "spec": [
+                                            {
+                                                "help": "",
+                                                "name": "estado",
+                                                "type": "text",
+                                                "label": null
+                                            },
+                                            {
+                                                "help": "",
+                                                "name": "nombre",
+                                                "type": "text",
+                                                "label": null
+                                            },
+                                            {
+                                                "help": "",
+                                                "name": "preferencia",
+                                                "type": "text",
+                                                "label": null
+                                            },
+                                            {
+                                                "help": "",
+                                                "name": "ultima_actividad",
+                                                "type": "date",
+                                                "label": null,
+                                                "required": false
+                                            },
+                                            {
+                                                "help": "",
+                                                "name": "primer_mensaje",
+                                                "type": "text",
+                                                "label": null
+                                            }
+                                        ],
+                                        "type": "collection",
+                                        "label": "Record"
+                                    }
+                                ],
+                                "advanced": true
+                            }
+                        },
+                        {
                             "id": 63,
                             "module": "datastore:UpdateRecord",
                             "version": 1,
@@ -3229,8 +3682,8 @@
                             },
                             "metadata": {
                                 "designer": {
-                                    "x": 1196,
-                                    "y": 448
+                                    "x": 891,
+                                    "y": -75
                                 },
                                 "restore": {
                                     "expect": {
@@ -3320,8 +3773,8 @@
                                 "from": "drive",
                                 "mode": "select",
                                 "values": {
-                                    "0": "{{formatDate(now; DD / MM / YYYY - HH:mm; America / Argentina / Buenos_Aires)}}",
-                                    "1": "{{33.nombre_wa}}",
+                                    "0": "{{formatDate(now; \"DD/MM/YYYY - HH:mm \"; \"America/Argentina/Buenos_Aires\")}}",
+                                    "1": "{{ifempty(65.data.nombre; 33.nombre_wa)}}",
                                     "2": "{{33.telefono}}",
                                     "4": "URGENTE",
                                     "5": "https://wa.me/{{33.telefono}}",
@@ -3338,8 +3791,8 @@
                             },
                             "metadata": {
                                 "designer": {
-                                    "x": 1496,
-                                    "y": 448
+                                    "x": 892,
+                                    "y": -370
                                 },
                                 "restore": {
                                     "expect": {
