@@ -374,6 +374,81 @@ número siga funcionando igual que tocar el botón.
 
 ---
 
+### El número de un módulo es su fecha de nacimiento, no su posición
+
+**Síntoma:** `'Text aggregator' [module ID 4] references inaccessible module
+'Gmail' [module ID 2]`. Se apuntó al módulo de al lado y resultó ser otro.
+
+**Causa:** Make numera los módulos por **orden de creación**. Un módulo
+insertado después queda con un número más alto aunque en el canvas esté
+antes. Una cadena puede verse `1 → 3 → 4 → 2`.
+
+**Solución:** mapear **arrastrando el chip** desde el panel, o leyendo el
+número real en el canvas. Nunca asumir que el orden visual es el numérico.
+
+---
+
+### IML usa `&` y `|`, nunca las palabras
+
+**Síntoma:** `Function 'if' finished with error! Function 'and' not found!`
+
+**Causa:** en el lenguaje de fórmulas de Make los operadores lógicos son
+símbolos. `and()` y `or()` no existen, y `AND` / `OR` como palabras tampoco
+parsean.
+
+**Solución:**
+
+```
+{{if(1.activo & length(4.texto) = 0; "ok"; "alerta")}}
+```
+
+| Operador | Significado |
+|---|---|
+| `&` | AND |
+| `\|` | OR |
+
+**Regla general:** la referencia de IML dice *"solo usá las funciones
+documentadas acá"*. Las fórmulas de Make se parecen a las de otros lenguajes
+lo suficiente como para que uno las escriba de memoria y se equivoque.
+
+---
+
+### Un literal en la plantilla de un agregador se escribe siempre
+
+**Síntoma:** el caso "no hay resultados" no queda vacío: queda con un `·`,
+un guión o dos puntos sueltos. Y entonces `ifempty` no se activa y
+`length(texto) = 0` da falso.
+
+**Causa:** en un Text aggregator, **todo lo que no sea un chip es texto fijo
+y se escribe aunque los chips vengan vacíos.** Con una plantilla
+`{{a}} · {{b}}` y datos vacíos, el resultado es `" · "`.
+
+**Solución:** que la plantilla sean **solo chips**. Si hace falta separar
+campos, usar el separador de filas del propio agregador.
+
+**Por qué importa más de lo que parece:** convierte un caso "vacío" en un
+caso "casi vacío", que es peor — parece que hay datos y todas las
+condiciones que preguntan por vacío fallan en silencio.
+
+---
+
+### Un agregador emite aunque no le entre ningún bundle
+
+Confirmado en una ejecución real: el módulo fuente devolvió
+`__IMTLENGTH__: 0` y el agregador produjo su bundle igual.
+
+Eso lo gobierna la opción **Stop processing after empty aggregation**:
+
+| Estado | Comportamiento |
+|---|---|
+| Desactivada (default) | Produce un bundle vacío. **El flujo sigue.** |
+| Activada | No produce nada. El flujo se corta. |
+
+**Es la forma de esquivar el problema clásico** de que un módulo de búsqueda
+sin resultados detenga todo lo que viene después.
+
+---
+
 # JavaScript
 
 ### Una cuenta devuelve `NaN`
@@ -605,3 +680,53 @@ Bloque 2:  las palabras sueltas   → solo cuando no se está esperando nada
 **Regla:** un botón es inequívoco —si lo tocó, lo quiso tocar—. Una palabra
 adentro de una frase es una adivinanza, y adivinar solo se justifica cuando
 la persona no está contestando una pregunta.
+
+---
+
+# Monitoreo
+
+### Un vigilante que solo habla cuando hay problemas no se distingue de uno muerto
+
+Si el escenario que vigila se rompe, no recibís nada — igual que cuando todo
+está bien. **El silencio significa dos cosas opuestas.**
+
+**Solución:** que mande un aviso **siempre**, con el estado en el asunto:
+
+```
+✅ Bot consultorio OK
+⚠️ ALERTA Bot consultorio
+```
+
+Los buenos se borran sin abrir. Y **si un día no llega ninguno, ese silencio
+también es una alarma** — porque ahora significa una sola cosa.
+
+Y la palabra `ALERTA` fija en el asunto permite filtrar y reenviar solo lo
+que importa, sin que el filtro se rompa cuando cambien los textos.
+
+---
+
+### Calibrar antes de dejarlo solo
+
+Un vigilante que avisa de más se vuelve inútil más rápido que uno que no
+avisa: **a la tercera falsa alarma dejás de mirarlo, y la cuarta era la de
+verdad.**
+
+Antes de activarlo, verificar el caso "todo bien" tanto como el caso
+"algo falla". Acá una plantilla con un separador literal habría mandado
+alerta todos los días, para siempre, sin que nada estuviera mal.
+
+---
+
+### Las conexiones vencen y nadie avisa
+
+Las conexiones de Google muestran una fecha de reautorización — del orden de
+seis meses. Cuando vence, el módulo deja de funcionar.
+
+Si lo que vence es el módulo que manda los avisos, **el sistema de monitoreo
+se apaga en silencio** y el silencio se lee como "todo bien".
+
+Lo mismo con los tokens de la API de WhatsApp: los temporales duran 24 horas.
+Para producción hace falta uno permanente de *System User*.
+
+**Anotar las fechas de vencimiento en un calendario, fuera de la herramienta
+que puede fallar.**
