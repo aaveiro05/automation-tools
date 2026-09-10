@@ -582,6 +582,29 @@ Business. La cuenta de desarrollador usa una cuenta de **Facebook**.
 
 ---
 
+### El número y los datos de AFIP no van en la misma pantalla
+
+**Síntoma:** se busca dónde cargar la constancia de AFIP dentro de la app de
+Meta for Developers, y no aparece por ningún lado.
+
+**Causa:** son dos sitios distintos de Meta, apoyados sobre el mismo negocio.
+
+| Qué | Dónde | Para qué |
+|---|---|---|
+| **El número de teléfono** | `developers.facebook.com` → la app → WhatsApp → API Setup | Acá llega el SMS con el código |
+| **AFIP, CUIT, dirección** | `business.facebook.com` → Configuración del negocio → Centro de seguridad | Verificación del negocio |
+
+El **portfolio** (el negocio) es el dueño; la **app** y la **WABA** cuelgan
+de él. Por eso los datos fiscales van en el portfolio y no en la app: la app
+es una pieza, el negocio es el titular.
+
+**Consecuencia práctica:** son trámites paralelos, no encadenados. Se puede
+agregar el número y recibir el código sin tener la verificación terminada.
+Lo que no se puede sin verificar es **usar plantillas** — o sea, no hay aviso
+al Dr.
+
+---
+
 ### Un audio o una foto llegan sin texto
 
 **Síntoma:** alguien manda un audio y el bot no contesta absolutamente nada.
