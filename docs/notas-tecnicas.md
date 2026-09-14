@@ -605,6 +605,37 @@ al Dr.
 
 ---
 
+### Un número recién cargado en la lista de prueba no recibe nada
+
+**Síntoma:** se agrega un destinatario nuevo en Meta for Developers y los
+envíos hacia ese número fallan, aunque el bot funcione con los ya cargados.
+
+**Tres causas, en orden de frecuencia:**
+
+1. **El destinatario no aceptó la invitación.** Al agregarlo, Meta le manda un
+   WhatsApp pidiendo confirmación. Sin ese toque, el número queda cargado pero
+   no habilitado. Es la causa más común y no tiene nada que ver con el formato.
+2. **El formato con `15`.** La lista de prueba guarda los números argentinos
+   como `54 <área> 15 <número>`, no con el `9`.
+3. **El tope de 5 destinatarios** del número de prueba.
+
+**Cómo confirmarlo sin adivinar:** leer el `curl` que genera el panel de Meta.
+La pantalla muestra el número con `9`, el `curl` lo escribe con `15`. **El
+`curl` es la verdad; lo que muestra la pantalla es cosmético.**
+
+Ojo que son dos formatos distintos según el momento:
+
+| Dónde | Formato |
+|---|---|
+| Para recibir el SMS de verificación | `+54 9 <área> <número>`, sin el `0` |
+| Como destinatario en la lista de prueba | `54 <área> 15 <número>` |
+
+> **Esto desaparece con el número real.** La lista blanca existe solo para el
+> número de prueba: un número registrado de verdad recibe de cualquiera. No es
+> un defecto del bot ni algo que vaya a pasarle a los pacientes.
+
+---
+
 ### Un audio o una foto llegan sin texto
 
 **Síntoma:** alguien manda un audio y el bot no contesta absolutamente nada.
