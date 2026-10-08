@@ -784,3 +784,38 @@ Para producción hace falta uno permanente de *System User*.
 
 **Anotar las fechas de vencimiento en un calendario, fuera de la herramienta
 que puede fallar.**
+
+---
+
+## Pasar un bot de WhatsApp del número de prueba al número real
+
+Tres trampas, encontradas en ese orden. Ninguna avisa dónde está el problema.
+
+**1 · Importar un blueprint te cambia la programación.** El archivo exportado
+no guarda la frecuencia del escenario. Al importarlo, un escenario que corría
+*inmediatamente* queda *cada 15 minutos*: las respuestas tardan un cuarto de
+hora y parece que el bot "a veces anda". Revisar la programación después de
+cada import.
+
+**2 · Cargar la dirección del webhook no es suscribir los campos.** El tilde de
+"Configurar webhooks" solo dice que la URL está cargada. Si el campo
+`messages` no está suscrito para esa cuenta de WhatsApp, los mensajes llegan
+al número y nadie se entera.
+
+**3 · El token vive atado a los activos del usuario del sistema.** Un token
+generado cuando el usuario del sistema solo tenía la *Test WhatsApp Business
+Account* funciona con el número de prueba y devuelve `[400] Authorization
+Error` con el número real. Hay que asignarle la cuenta nueva como activo y
+generar el token de nuevo, con caducidad *Nunca*.
+
+### Cómo se diagnostica, sin adivinar
+
+| Síntoma | Dónde está cortado |
+|---|---|
+| Cola del webhook vacía y ninguna ejecución | Meta no entrega: webhook |
+| El escenario corre y falla al enviar | Ya entrega: token o permisos |
+| Mensaje con dos tildes pero nada en la plataforma | El número recibe; el aviso no sale |
+
+La alerta por mail del escenario fue lo que destrabó el diagnóstico: traía el
+código de error exacto. **Un sistema que no avisa cuando se rompe obliga a
+buscar en el lado equivocado.**
