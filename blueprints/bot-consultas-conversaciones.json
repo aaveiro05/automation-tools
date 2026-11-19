@@ -489,10 +489,10 @@
                                             "mapper": {
                                                 "to": "{{54 + substring(33.telefono; 3; 6) + 15 + substring(33.telefono; 6)}}",
                                                 "type": "interactive",
-                                                "fromId": "1265507849982857",
+                                                "fromId": "{{NUMERO_DE_PRUEBA_ID}}",
                                                 "interactive": {
                                                     "body": {
-                                                        "text": "¡Hola! 👋 Soy el asistente del consultorio del *Dr. Aveiro*.\r\n\r\nContesto a cualquier hora. Contame qué necesitás:"
+                                                        "text": "¡Hola! 👋 Soy el asistente del consultorio del *{{NOMBRE_PROFESIONAL}}*.\r\n\r\nContesto a cualquier hora. Contame qué necesitás:"
                                                     },
                                                     "type": "button",
                                                     "action": {
@@ -576,7 +576,7 @@
                                                                 "scoped": "true",
                                                                 "connection": "whatsapp-business-cloud2"
                                                             },
-                                                            "label": "WhatsApp - Consultorio Aveiro (Employee)"
+                                                            "label": "WhatsApp - {{NOMBRE_NEGOCIO}} (Employee)"
                                                         }
                                                     }
                                                 },
@@ -876,7 +876,7 @@
                                                     "preview_url": false
                                                 },
                                                 "type": "text",
-                                                "fromId": "1265507849982857"
+                                                "fromId": "{{NUMERO_DE_PRUEBA_ID}}"
                                             },
                                             "metadata": {
                                                 "designer": {
@@ -906,7 +906,7 @@
                                                                 "scoped": "true",
                                                                 "connection": "whatsapp-business-cloud2"
                                                             },
-                                                            "label": "WhatsApp - Consultorio Aveiro (Employee)"
+                                                            "label": "WhatsApp - {{NOMBRE_NEGOCIO}} (Employee)"
                                                         }
                                                     }
                                                 },
@@ -1111,7 +1111,7 @@
                                                     "preview_url": false
                                                 },
                                                 "type": "text",
-                                                "fromId": "1265507849982857"
+                                                "fromId": "{{NUMERO_DE_PRUEBA_ID}}"
                                             },
                                             "metadata": {
                                                 "designer": {
@@ -1141,7 +1141,7 @@
                                                                 "scoped": "true",
                                                                 "connection": "whatsapp-business-cloud2"
                                                             },
-                                                            "label": "WhatsApp - Consultorio Aveiro (Employee)"
+                                                            "label": "WhatsApp - {{NOMBRE_NEGOCIO}} (Employee)"
                                                         }
                                                     }
                                                 },
@@ -1353,7 +1353,7 @@
                                                     "7": "{{33.nombre_wa}}"
                                                 },
                                                 "sheetId": "Hoja 1",
-                                                "spreadsheetId": "/1ah4YbV10Gf3NSgBnOh6uno0Kxpb2nxFyAvI4J7gWTGE",
+                                                "spreadsheetId": "/{{SPREADSHEET_ID}}",
                                                 "includesHeaders": true,
                                                 "insertDataOption": "INSERT_ROWS",
                                                 "useColumnHeaders": false,
@@ -1405,7 +1405,7 @@
                                                                 "scoped": "true",
                                                                 "connection": "google"
                                                             },
-                                                            "label": "alej0's Google connection (alejoaveiro05@gmail.com)"
+                                                            "label": "Google connection (tu-cuenta@example.com)"
                                                         }
                                                     }
                                                 },
@@ -1673,11 +1673,11 @@
                                             "mapper": {
                                                 "to": "{{54 + substring(33.telefono; 3; 6) + 15 + substring(33.telefono; 6)}}",
                                                 "text": {
-                                                    "body": "Listo, {{4.data.nombre}}. Ya quedó anotado tu pedido.\r\nEl Dr. te escribe para confirmarte el horario.\r\nTe recuerdo que la consulta vale $20.000.\n📍 Acá está el consultorio: https://www.google.com/maps/place/Rivadavia+1275,+P3600+Formosa/@-26.1876098,-58.1645888,21z/data=!4m6!3m5!1s0x945ca5df90babfe1:0x54ed3a234bf010c5!8m2!3d-26.1876098!4d-58.1644279!16s%2Fg%2F11s9gqmpb5?entry=ttu&g_ep=EgoyMDI2MDkwMS4wIKXMDSoASAFQAw%3D%3D",
+                                                    "body": "Listo, {{4.data.nombre}}. Ya quedó anotado tu pedido.\r\nEl Dr. te escribe para confirmarte el horario.\r\nTe recuerdo que la consulta vale {{PRECIO_CONSULTA}}.\n📍 Acá está el consultorio: {{LINK_MAPS}}",
                                                     "preview_url": false
                                                 },
                                                 "type": "text",
-                                                "fromId": "1265507849982857"
+                                                "fromId": "{{NUMERO_DE_PRUEBA_ID}}"
                                             },
                                             "metadata": {
                                                 "designer": {
@@ -1707,7 +1707,7 @@
                                                                 "scoped": "true",
                                                                 "connection": "whatsapp-business-cloud2"
                                                             },
-                                                            "label": "WhatsApp - Consultorio Aveiro (Employee)"
+                                                            "label": "WhatsApp - {{NOMBRE_NEGOCIO}} (Employee)"
                                                         }
                                                     }
                                                 },
@@ -1818,10 +1818,10 @@
                                             "mapper": {
                                                 "to": "{{54 + substring(33.telefono; 3; 6) + 15 + substring(33.telefono; 6)}}",
                                                 "type": "interactive",
-                                                "fromId": "1265507849982857",
+                                                "fromId": "{{NUMERO_DE_PRUEBA_ID}}",
                                                 "interactive": {
                                                     "body": {
-                                                        "text": "🦷 *Qué se atiende*\r\nLimpieza · arreglos · conductos · extracciones · prótesis · blanqueamiento · carillas\r\n\r\nEl precio de cada tratamiento depende de lo que necesites, y eso lo define el Dr. cuando te revisa.\r\n\r\n💰 *La consulta*\r\n$20.000 — incluye revisión y diagnóstico.\r\n\r\n🩺 *Obras sociales*\r\nIASEP y Sancor. También atiende particular.\r\nSi tenés otra, consultale al Dr.\r\n\r\n🕐 *Horarios*\r\nLunes a viernes, de 7:30 a 11:30 y de 16 a 19.\r\n\r\n📍 *Dónde*\r\nRivadavia 1275, Formosa\r\n\r\n💳 *Pagos*\r\nEfectivo, débito, crédito y transferencia."
+                                                        "text": "🦷 *Qué se atiende*\r\nLimpieza · arreglos · conductos · extracciones · prótesis · blanqueamiento · carillas\r\n\r\nEl precio de cada tratamiento depende de lo que necesites, y eso lo define el Dr. cuando te revisa.\r\n\r\n💰 *La consulta*\r\n{{PRECIO_CONSULTA}} — incluye revisión y diagnóstico.\r\n\r\n🩺 *Obras sociales*\r\nIASEP y Sancor. También atiende particular.\r\nSi tenés otra, consultale al Dr.\r\n\r\n🕐 *Horarios*\r\nLunes a viernes, de 7:30 a 11:30 y de 16 a 19.\r\n\r\n📍 *Dónde*\r\n{{DIRECCION}}\r\n\r\n💳 *Pagos*\r\nEfectivo, débito, crédito y transferencia."
                                                     },
                                                     "type": "button",
                                                     "action": {
@@ -1896,7 +1896,7 @@
                                                                 "scoped": "true",
                                                                 "connection": "whatsapp-business-cloud2"
                                                             },
-                                                            "label": "WhatsApp - Consultorio Aveiro (Employee)"
+                                                            "label": "WhatsApp - {{NOMBRE_NEGOCIO}} (Employee)"
                                                         }
                                                     }
                                                 },
@@ -2196,7 +2196,7 @@
                                                     "preview_url": false
                                                 },
                                                 "type": "text",
-                                                "fromId": "1265507849982857"
+                                                "fromId": "{{NUMERO_DE_PRUEBA_ID}}"
                                             },
                                             "metadata": {
                                                 "designer": {
@@ -2226,7 +2226,7 @@
                                                                 "scoped": "true",
                                                                 "connection": "whatsapp-business-cloud2"
                                                             },
-                                                            "label": "WhatsApp - Consultorio Aveiro (Employee)"
+                                                            "label": "WhatsApp - {{NOMBRE_NEGOCIO}} (Employee)"
                                                         }
                                                     }
                                                 },
@@ -2315,7 +2315,7 @@
                                                     "7": "{{33.nombre_wa}}"
                                                 },
                                                 "sheetId": "Hoja 1",
-                                                "spreadsheetId": "/1ah4YbV10Gf3NSgBnOh6uno0Kxpb2nxFyAvI4J7gWTGE",
+                                                "spreadsheetId": "/{{SPREADSHEET_ID}}",
                                                 "includesHeaders": true,
                                                 "insertDataOption": "INSERT_ROWS",
                                                 "useColumnHeaders": false,
@@ -2367,7 +2367,7 @@
                                                                 "scoped": "true",
                                                                 "connection": "google"
                                                             },
-                                                            "label": "alej0's Google connection (alejoaveiro05@gmail.com)"
+                                                            "label": "Google connection (tu-cuenta@example.com)"
                                                         }
                                                     }
                                                 },
@@ -2661,7 +2661,7 @@
                                             "mapper": {
                                                 "to": "{{54 + substring(33.telefono; 3; 6) + 15 + substring(33.telefono; 6)}}",
                                                 "type": "interactive",
-                                                "fromId": "1265507849982857",
+                                                "fromId": "{{NUMERO_DE_PRUEBA_ID}}",
                                                 "interactive": {
                                                     "body": {
                                                         "text": "Uy, perdoname — eso no te puedo responder.\n\r\nSoy el asistente del consultorio y por ahora manejo solo estas opciones:"
@@ -2747,7 +2747,7 @@
                                                                 "scoped": "true",
                                                                 "connection": "whatsapp-business-cloud2"
                                                             },
-                                                            "label": "WhatsApp - Consultorio Aveiro (Employee)"
+                                                            "label": "WhatsApp - {{NOMBRE_NEGOCIO}} (Employee)"
                                                         }
                                                     }
                                                 },
@@ -3049,7 +3049,7 @@
                                             "mapper": {
                                                 "to": "{{54 + substring(33.telefono; 3; 6) + 15 + substring(33.telefono; 6)}}",
                                                 "type": "interactive",
-                                                "fromId": "1265507849982857",
+                                                "fromId": "{{NUMERO_DE_PRUEBA_ID}}",
                                                 "interactive": {
                                                     "body": {
                                                         "text": "¡Hola de nuevo{{if(length(4.data.nombre) > 0; \", \" + 4.data.nombre; )}}! 👋\r\n\r\n¿En qué te puedo ayudar?"
@@ -3135,7 +3135,7 @@
                                                                 "scoped": "true",
                                                                 "connection": "whatsapp-business-cloud2"
                                                             },
-                                                            "label": "WhatsApp - Consultorio Aveiro (Employee)"
+                                                            "label": "WhatsApp - {{NOMBRE_NEGOCIO}} (Employee)"
                                                         }
                                                     }
                                                 },
@@ -3335,7 +3335,7 @@
                                                     "preview_url": false
                                                 },
                                                 "type": "text",
-                                                "fromId": "1265507849982857"
+                                                "fromId": "{{NUMERO_DE_PRUEBA_ID}}"
                                             },
                                             "metadata": {
                                                 "designer": {
@@ -3365,7 +3365,7 @@
                                                                 "scoped": "true",
                                                                 "connection": "whatsapp-business-cloud2"
                                                             },
-                                                            "label": "WhatsApp - Consultorio Aveiro (Employee)"
+                                                            "label": "WhatsApp - {{NOMBRE_NEGOCIO}} (Employee)"
                                                         }
                                                     }
                                                 },
@@ -3468,7 +3468,7 @@
                                     "preview_url": false
                                 },
                                 "type": "text",
-                                "fromId": "1265507849982857"
+                                "fromId": "{{NUMERO_DE_PRUEBA_ID}}"
                             },
                             "metadata": {
                                 "designer": {
@@ -3498,7 +3498,7 @@
                                                 "scoped": "true",
                                                 "connection": "whatsapp-business-cloud2"
                                             },
-                                            "label": "WhatsApp - Consultorio Aveiro (Employee)"
+                                            "label": "WhatsApp - {{NOMBRE_NEGOCIO}} (Employee)"
                                         }
                                     }
                                 },
@@ -3782,7 +3782,7 @@
                                     "7": "{{33.nombre_wa}}"
                                 },
                                 "sheetId": "Hoja 1",
-                                "spreadsheetId": "/1ah4YbV10Gf3NSgBnOh6uno0Kxpb2nxFyAvI4J7gWTGE",
+                                "spreadsheetId": "/{{SPREADSHEET_ID}}",
                                 "includesHeaders": true,
                                 "insertDataOption": "INSERT_ROWS",
                                 "useColumnHeaders": false,
@@ -3835,7 +3835,7 @@
                                                 "scoped": "true",
                                                 "connection": "google"
                                             },
-                                            "label": "alej0's Google connection (alejoaveiro05@gmail.com)"
+                                            "label": "Google connection (tu-cuenta@example.com)"
                                         }
                                     }
                                 },
@@ -4216,10 +4216,10 @@
                             "mapper": {
                                 "to": "{{54 + substring(33.telefono; 3; 6) + 15 + substring(33.telefono; 6)}}",
                                 "type": "interactive",
-                                "fromId": "1265507849982857",
+                                "fromId": "{{NUMERO_DE_PRUEBA_ID}}",
                                 "interactive": {
                                     "body": {
-                                        "text": "¡Hola! 👋 Soy el asistente del consultorio del *Dr. Aveiro*.\r\nTodavía no puedo escuchar audios ni ver fotos, mil disculpas.\r\nSi querés, tocá una opción y seguimos por acá:"
+                                        "text": "¡Hola! 👋 Soy el asistente del consultorio del *{{NOMBRE_PROFESIONAL}}*.\r\nTodavía no puedo escuchar audios ni ver fotos, mil disculpas.\r\nSi querés, tocá una opción y seguimos por acá:"
                                     },
                                     "type": "button",
                                     "action": {
@@ -4302,7 +4302,7 @@
                                                 "scoped": "true",
                                                 "connection": "whatsapp-business-cloud2"
                                             },
-                                            "label": "WhatsApp - Consultorio Aveiro (Employee)"
+                                            "label": "WhatsApp - {{NOMBRE_NEGOCIO}} (Employee)"
                                         }
                                     }
                                 },

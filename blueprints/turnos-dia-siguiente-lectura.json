@@ -9,7 +9,7 @@
                 "__IMTCONN__": 10428132
             },
             "mapper": {
-                "calendar": "alejoaveiro05@gmail.com",
+                "calendar": "tu-cuenta@example.com",
                 "timeMin": "2026-08-15T00:00:00",
                 "timeMax": "2026-08-15T23:59:59",
                 "singleEvents": true,
@@ -24,7 +24,7 @@
                 "restore": {
                     "parameters": {
                         "__IMTCONN__": {
-                            "label": "alej0's Google connection (alejoaveiro05@gmail.com)",
+                            "label": "Google connection (tu-cuenta@example.com)",
                             "data": {
                                 "scoped": "true",
                                 "connection": "google"
@@ -34,7 +34,7 @@
                     "expect": {
                         "calendar": {
                             "mode": "chose",
-                            "label": "alejoaveiro05@gmail.com (Primary Calendar)"
+                            "label": "tu-cuenta@example.com (Primary Calendar)"
                         },
                         "eventTypes": {
                             "mode": "chose"
@@ -155,7 +155,7 @@
                 "restore": {
                     "parameters": {
                         "__IMTCONN__": {
-                            "label": "alej0's Google connection (alejoaveiro05@gmail.com)",
+                            "label": "Google connection (tu-cuenta@example.com)",
                             "data": {
                                 "scoped": "true",
                                 "connection": "google"
